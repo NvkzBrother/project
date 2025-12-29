@@ -248,6 +248,88 @@
             color: #00d9ff;
         }
 
+        /* ==================== COLLAPSIBLE SECTION ==================== */
+        .section-collapsible {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .section-header:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .section-header:active {
+            background: rgba(255,255,255,0.08);
+        }
+
+        .section-header h2 {
+            font-size: 0.85rem;
+            margin: 0;
+            color: #00d9ff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-header .employee-count {
+            background: rgba(0, 217, 255, 0.2);
+            color: #00d9ff;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: normal;
+        }
+
+        .section-toggle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s, background 0.2s;
+        }
+
+        .section-toggle::before {
+            content: '▼';
+            font-size: 0.65rem;
+            color: #aaa;
+            transition: transform 0.3s;
+        }
+
+        .section-collapsible.expanded .section-toggle {
+            background: rgba(0, 217, 255, 0.2);
+        }
+
+        .section-collapsible.expanded .section-toggle::before {
+            transform: rotate(180deg);
+            color: #00d9ff;
+        }
+
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+            padding: 0 14px;
+        }
+
+        .section-collapsible.expanded .section-content {
+            max-height: 500px;
+            padding: 0 14px 14px 14px;
+        }
+
         /* Employees */
         .add-employee {
             display: flex;
@@ -271,7 +353,7 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
-            max-height: 180px;
+            max-height: 250px;
             overflow-y: auto;
         }
 
@@ -289,6 +371,11 @@
             align-items: center;
             gap: 8px;
             font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .employee-info:hover {
+            color: #00d9ff;
         }
 
         .employee-color {
@@ -409,7 +496,6 @@
             background: rgba(255, 71, 87, 0.08);
         }
 
-        /* Ячейка с именем сотрудника - кликабельная */
         .schedule-table td.employee-name {
             text-align: left;
             font-size: 0.55rem;
@@ -756,7 +842,6 @@
             color: #00d9ff;
         }
 
-        /* Компактный календарь */
         .emp-calendar {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -967,7 +1052,8 @@
                 display: block; 
             }
             
-            .section.hidden-mobile { 
+            .section.hidden-mobile,
+            .section-collapsible.hidden-mobile { 
                 display: none; 
             }
 
@@ -1004,6 +1090,18 @@
 
             .section h2 {
                 font-size: 1.1rem;
+            }
+
+            .section-collapsible .section-header h2 {
+                font-size: 1.1rem;
+            }
+
+            .section-collapsible .section-content {
+                padding: 0 20px;
+            }
+
+            .section-collapsible.expanded .section-content {
+                padding: 0 20px 20px 20px;
             }
 
             .app-header h1 {
@@ -1189,13 +1287,23 @@
                 width: 16px;
                 height: 16px;
             }
-        }
 
-        @media (min-width: 1024px) {
-            .main-grid {
-                display: grid;
-                grid-template-columns: 280px 1fr;
-                gap: 20px;
+            .section-header {
+                padding: 14px 20px;
+            }
+
+            .section-header .employee-count {
+                font-size: 0.8rem;
+                padding: 3px 10px;
+            }
+
+            .section-toggle {
+                width: 32px;
+                height: 32px;
+            }
+
+            .section-toggle::before {
+                font-size: 0.75rem;
             }
         }
     </style>
@@ -1240,10 +1348,41 @@
             <button onclick="exportToExcel()" class="btn-excel">📊 Excel</button>
         </div>
 
-        <div class="main-grid">
-            <!-- Сотрудники -->
-            <section class="section" id="sectionEmployees">
-                <h2>👥 Сотрудники</h2>
+        <!-- Календарь -->
+        <section class="section" id="sectionCalendar">
+            <div class="calendar-header">
+                <button onclick="changeMonth(-1)">◀</button>
+                <h2 id="currentMonthDisplay"></h2>
+                <button onclick="changeMonth(1)">▶</button>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item"><div class="legend-color shift-work">10</div><span>Часы</span></div>
+                <div class="legend-item"><div class="legend-color shift-work-cleaning">У</div><span>Уборка</span></div>
+                <div class="legend-item"><div class="legend-color shift-work-fullCleaning">У1</div><span>Полная</span></div>
+                <div class="legend-item"><div class="legend-color shift-off">В</div><span>Вых</span></div>
+                <div class="legend-item"><div class="legend-color shift-vacation">О</div><span>Отп</span></div>
+                <div class="legend-item"><div class="legend-color shift-sick">Б</div><span>Бол</span></div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="schedule-table">
+                    <thead id="tableHead"></thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Сотрудники - сворачиваемый блок -->
+        <section class="section-collapsible" id="sectionEmployees">
+            <div class="section-header" onclick="toggleEmployeesSection()">
+                <h2>
+                    👥 Сотрудники
+                    <span class="employee-count" id="employeeCount">0</span>
+                </h2>
+                <div class="section-toggle"></div>
+            </div>
+            <div class="section-content">
                 <div class="add-employee">
                     <input type="text" id="newEmployeeName" placeholder="Имя сотрудника">
                     <button onclick="addEmployee()">+</button>
@@ -1251,33 +1390,8 @@
                 <div class="employee-list" id="employeeList">
                     <div class="loading"><div class="spinner"></div></div>
                 </div>
-            </section>
-
-            <!-- Календарь -->
-            <section class="section" id="sectionCalendar">
-                <div class="calendar-header">
-                    <button onclick="changeMonth(-1)">◀</button>
-                    <h2 id="currentMonthDisplay"></h2>
-                    <button onclick="changeMonth(1)">▶</button>
-                </div>
-
-                <div class="legend">
-                    <div class="legend-item"><div class="legend-color shift-work">10</div><span>Часы</span></div>
-                    <div class="legend-item"><div class="legend-color shift-work-cleaning">У</div><span>Уборка</span></div>
-                    <div class="legend-item"><div class="legend-color shift-work-fullCleaning">У1</div><span>Полная</span></div>
-                    <div class="legend-item"><div class="legend-color shift-off">В</div><span>Вых</span></div>
-                    <div class="legend-item"><div class="legend-color shift-vacation">О</div><span>Отп</span></div>
-                    <div class="legend-item"><div class="legend-color shift-sick">Б</div><span>Бол</span></div>
-                </div>
-
-                <div class="table-wrapper">
-                    <table class="schedule-table">
-                        <thead id="tableHead"></thead>
-                        <tbody id="tableBody"></tbody>
-                    </table>
-                </div>
-            </section>
-        </div>
+            </div>
+        </section>
 
         <!-- Статистика -->
         <section class="section" id="sectionStats">
@@ -1402,7 +1516,6 @@
         const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
         const monthNamesShort = ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'];
         const dayNames = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
-        const dayNamesShort = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
 
         document.addEventListener('DOMContentLoaded', () => {
             checkAuth();
@@ -1415,7 +1528,14 @@
             isMobile = window.innerWidth <= 768;
             if (!isMobile) {
                 document.querySelectorAll('.section').forEach(s => s.classList.remove('hidden-mobile'));
+                document.querySelectorAll('.section-collapsible').forEach(s => s.classList.remove('hidden-mobile'));
             }
+        }
+
+        // ==================== COLLAPSIBLE SECTION ====================
+        function toggleEmployeesSection() {
+            const section = document.getElementById('sectionEmployees');
+            section.classList.toggle('expanded');
         }
 
         async function checkAuth() {
@@ -1549,7 +1669,6 @@
                 if (data === null) delete shifts[key];
                 else shifts[key] = data;
                 render();
-                // Обновить модальное окно сотрудника если открыто
                 if (selectedEmployee) {
                     renderEmployeeCalendar(selectedEmployee);
                 }
@@ -1584,6 +1703,8 @@
             renderEmployeeList();
             renderCalendar();
             renderStats();
+            // Обновить счётчик сотрудников
+            document.getElementById('employeeCount').textContent = employees.length;
         }
 
         function renderEmployeeList() {
@@ -1594,7 +1715,7 @@
             }
             list.innerHTML = employees.map(e => `
                 <div class="employee-item">
-                    <div class="employee-info" onclick="openEmployeeModal('${e.id}')" style="cursor:pointer">
+                    <div class="employee-info" onclick="openEmployeeModal('${e.id}')">
                         <div class="employee-color" style="background:${e.color}"></div>
                         <span>${e.name}</span>
                     </div>
@@ -1807,7 +1928,6 @@
             
             document.getElementById('empModalMonth').textContent = `${monthNames[month]} ${year}`;
             
-            // Подсчёт статистики
             let stats = { hours: 0, shifts: 0, cleaning: 0, fullCleaning: 0 };
             for (let d = 1; d <= days; d++) {
                 const shift = shifts[`${empId}_${year}-${month}-${d}`];
@@ -1838,24 +1958,19 @@
                 </div>
             `;
             
-            // Календарь
             let calendarHtml = '';
             
-            // Заголовки дней недели (начиная с понедельника)
             const daysOrder = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
             daysOrder.forEach((day, i) => {
                 const isWeekend = i >= 5;
                 calendarHtml += `<div class="emp-calendar-header ${isWeekend ? 'weekend' : ''}">${day}</div>`;
             });
             
-            // Пустые ячейки до первого дня месяца
-            // Преобразуем: 0 (Вс) -> 6, 1 (Пн) -> 0, 2 (Вт) -> 1, ...
             const adjustedFirstDay = firstDay === 0 ? 6 : firstDay - 1;
             for (let i = 0; i < adjustedFirstDay; i++) {
                 calendarHtml += '<div class="emp-calendar-day empty"></div>';
             }
             
-            // Дни месяца
             for (let d = 1; d <= days; d++) {
                 const dow = getDayOfWeek(year, month, d);
                 const isWeekend = dow === 0 || dow === 6;
@@ -1905,8 +2020,22 @@
             if (!isMobile) return;
             document.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.section').forEach(s => s.classList.add('hidden-mobile'));
-            const map = { calendar: 'sectionCalendar', employees: 'sectionEmployees', stats: 'sectionStats' };
-            document.getElementById(map[section]).classList.remove('hidden-mobile');
+            document.querySelectorAll('.section-collapsible').forEach(s => s.classList.add('hidden-mobile'));
+            
+            const map = { 
+                calendar: 'sectionCalendar', 
+                employees: 'sectionEmployees', 
+                stats: 'sectionStats' 
+            };
+            
+            const targetSection = document.getElementById(map[section]);
+            targetSection.classList.remove('hidden-mobile');
+            
+            // Автоматически разворачиваем секцию сотрудников на мобильном
+            if (section === 'employees') {
+                targetSection.classList.add('expanded');
+            }
+            
             document.querySelector(`.mobile-tab[onclick="showSection('${section}')"]`).classList.add('active');
         }
 
