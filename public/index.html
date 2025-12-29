@@ -409,16 +409,22 @@
             background: rgba(255, 71, 87, 0.08);
         }
 
+        /* ИЗМЕНЕНО: Ячейка с именем сотрудника */
         .schedule-table td.employee-name {
             text-align: left;
-            font-size: 0.7rem;
+            font-size: 0.55rem;              /* уменьшен шрифт */
             font-weight: 500;
-            min-width: 70px;
-            max-width: 90px;
-            padding: 6px 8px;
-            white-space: nowrap;
+            width: 65px;                     /* фиксированная ширина */
+            min-width: 65px;
+            max-width: 65px;
+            padding: 3px 5px;
+            white-space: normal;             /* разрешаем перенос на 2 строки */
+            word-wrap: break-word;
+            word-break: break-word;
+            line-height: 1.15;               /* межстрочный интервал */
+            vertical-align: middle;
+            height: 34px;                    /* фиксированная высота */
             overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         .shift-cell {
@@ -912,10 +918,14 @@
                 padding: 10px 5px;
             }
 
+            /* ИЗМЕНЕНО: Для десктопа */
             .schedule-table td.employee-name {
-                font-size: 0.85rem;
-                min-width: 100px;
-                max-width: 130px;
+                font-size: 0.7rem;
+                width: 90px;
+                min-width: 90px;
+                max-width: 90px;
+                padding: 5px 8px;
+                height: 42px;
             }
 
             .employee-info {
@@ -1176,17 +1186,17 @@
         }
 
         function showApp() {
-    document.getElementById('loginScreen').classList.add('hidden');
-    document.getElementById('appScreen').classList.add('active');
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('appScreen').classList.add('active');
 
-    if (isMobile) {
-        document.getElementById('mobileTabs').style.display = 'block';
-        showSection('calendar'); // ← ВАЖНО
-    }
+            if (isMobile) {
+                document.getElementById('mobileTabs').style.display = 'block';
+                showSection('calendar');
+            }
 
-    document.getElementById('userBadge').textContent = currentUser.name;
-    loadData();
-}
+            document.getElementById('userBadge').textContent = currentUser.name;
+            loadData();
+        }
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -1521,35 +1531,44 @@
             setTimeout(() => toast.classList.remove('show'), 2500);
         }
 
+        // ИЗМЕНЕНО: Экспорт в Excel с автоматическим скачиванием
         function exportToExcel() {
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-            const days = getDaysInMonth(year, month);
-            const wb = XLSX.utils.book_new();
+            try {
+                const year = currentDate.getFullYear();
+                const month = currentDate.getMonth();
+                const days = getDaysInMonth(year, month);
+                const wb = XLSX.utils.book_new();
 
-            const data = [[`График смен - ${monthNames[month]} ${year}`], []];
-            const header = ['Сотрудник'];
-            for (let d = 1; d <= days; d++) header.push(`${d} ${dayNames[getDayOfWeek(year, month, d)]}`);
-            header.push('Часов');
-            data.push(header);
+                const data = [[`График смен - ${monthNames[month]} ${year}`], []];
+                const header = ['Сотрудник'];
+                for (let d = 1; d <= days; d++) header.push(`${d} ${dayNames[getDayOfWeek(year, month, d)]}`);
+                header.push('Часов');
+                data.push(header);
 
-            employees.forEach(emp => {
-                const row = [emp.name];
-                let total = 0;
-                for (let d = 1; d <= days; d++) {
-                    const shift = shifts[`${emp.id}_${year}-${month}-${d}`];
-                    row.push(getShiftDisplay(shift).label);
-                    if (shift?.type === 'work') total += shift.hours;
-                }
-                row.push(total);
-                data.push(row);
-            });
+                employees.forEach(emp => {
+                    const row = [emp.name];
+                    let total = 0;
+                    for (let d = 1; d <= days; d++) {
+                        const shift = shifts[`${emp.id}_${year}-${month}-${d}`];
+                        row.push(getShiftDisplay(shift).label);
+                        if (shift?.type === 'work') total += shift.hours;
+                    }
+                    row.push(total);
+                    data.push(row);
+                });
 
-            const ws = XLSX.utils.aoa_to_sheet(data);
-            ws['!cols'] = [{ wch: 20 }, ...Array(days).fill({ wch: 6 }), { wch: 8 }];
-            XLSX.utils.book_append_sheet(wb, ws, 'График');
-            XLSX.writeFile(wb, `Смены_${monthNamesShort[month]}_${year}.xlsx`);
-            showToast('📊 Сохранено');
+                const ws = XLSX.utils.aoa_to_sheet(data);
+                ws['!cols'] = [{ wch: 20 }, ...Array(days).fill({ wch: 6 }), { wch: 8 }];
+                XLSX.utils.book_append_sheet(wb, ws, 'График');
+                
+                // Автоматическое скачивание
+                const fileName = `Смены_${monthNamesShort[month]}_${year}.xlsx`;
+                XLSX.writeFile(wb, fileName);
+                
+                showToast('📊 Файл скачан: ' + fileName);
+            } catch (error) {
+                showToast('Ошибка экспорта: ' + error.message, true);
+            }
         }
 
         document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
