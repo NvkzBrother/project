@@ -1519,35 +1519,62 @@
         }
 
         function exportToExcel() {
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-            const days = getDaysInMonth(year, month);
-            const wb = XLSX.utils.book_new();
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    const days = getDaysInMonth(year, month);
 
-            const data = [[`График смен - ${monthNames[month]} ${year}`], []];
-            const header = ['Сотрудник'];
-            for (let d = 1; d <= days; d++) header.push(`${d} ${dayNames[getDayOfWeek(year, month, d)]}`);
-            header.push('Часов');
-            data.push(header);
+    const wb = XLSX.utils.book_new();
+    const data = [[`График смен - ${monthNames[month]} ${year}`], []];
 
-            employees.forEach(emp => {
-                const row = [emp.name];
-                let total = 0;
-                for (let d = 1; d <= days; d++) {
-                    const shift = shifts[`${emp.id}_${year}-${month}-${d}`];
-                    row.push(getShiftDisplay(shift).label);
-                    if (shift?.type === 'work') total += shift.hours;
-                }
-                row.push(total);
-                data.push(row);
-            });
+    const header = ['Сотрудник'];
+    for (let d = 1; d <= days; d++) {
+        header.push(`${d} ${dayNames[getDayOfWeek(year, month, d)]}`);
+    }
+    header.push('Часов');
+    data.push(header);
 
-            const ws = XLSX.utils.aoa_to_sheet(data);
-            ws['!cols'] = [{ wch: 20 }, ...Array(days).fill({ wch: 6 }), { wch: 8 }];
-            XLSX.utils.book_append_sheet(wb, ws, 'График');
-            XLSX.writeFile(wb, `Смены_${monthNamesShort[month]}_${year}.xlsx`);
-            showToast('📊 Сохранено');
+    employees.forEach(emp => {
+        const row = [emp.name];
+        let total = 0;
+        for (let d = 1; d <= days; d++) {
+            const shift = shifts[`${emp.id}_${year}-${month}-${d}`];
+            row.push(getShiftDisplay(shift).label);
+            if (shift?.type === 'work') total += shift.hours;
         }
+        row.push(total);
+        data.push(row);
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    ws['!cols'] = [{ wch: 20 }, ...Array(days).fill({ wch: 6 }), { wch: 8 }];
+    XLSX.utils.book_append_sheet(wb, ws, 'График');
+
+    // 🔑 ВАЖНО: бинарный вывод
+    const wbout = XLSX.write(wb, {
+        bookType: 'xlsx',
+        type: 'array'
+    });
+
+    const blob = new Blob([wbout], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+
+    const fileName = `Смены_${monthNamesShort[month]}_${year}.xlsx`;
+
+    // 🔽 Универсальная загрузка
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+
+    setTimeout(() => {
+        URL.revokeObjectURL(link.href);
+        document.body.removeChild(link);
+    }, 100);
+
+    showToast('📊 Excel сохранён');
+}
 
         document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
     </script>
