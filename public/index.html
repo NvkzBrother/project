@@ -4,25 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>График смен</title>
+    
     <!-- PWA Meta Tags -->
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#00d9ff">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Смены">
-<link rel="apple-touch-icon" href="/icon-192.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#00d9ff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Смены">
+    <link rel="apple-touch-icon" href="/icon-192.png">
 
-<!-- PWA Service Worker -->
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .then(reg => console.log('SW registered'))
-        .catch(err => console.log('SW error:', err));
-    });
-  }
-</script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW error:', err));
+            });
+        }
+    </script>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
     <style>
         * {
             margin: 0;
@@ -35,7 +35,9 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
+            min-height: -webkit-fill-available;
             color: #fff;
+            overflow-x: hidden;
         }
 
         /* ==================== LOGIN SCREEN ==================== */
@@ -44,15 +46,16 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            min-height: -webkit-fill-available;
             padding: 20px;
         }
 
         .login-box {
             background: rgba(255,255,255,0.1);
-            padding: 40px 30px;
+            padding: 40px 25px;
             border-radius: 20px;
             width: 100%;
-            max-width: 400px;
+            max-width: 380px;
             backdrop-filter: blur(10px);
         }
 
@@ -103,11 +106,6 @@
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .login-btn:hover {
-            transform: translateY(-2px);
         }
 
         .login-error {
@@ -123,8 +121,8 @@
         /* ==================== MAIN APP ==================== */
         .app-screen {
             display: none;
-            padding: 15px;
-            padding-bottom: 80px;
+            padding: 10px;
+            padding-bottom: 70px;
         }
 
         .app-screen.active {
@@ -140,13 +138,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 10px;
+            margin-bottom: 15px;
+            padding: 5px 0;
         }
 
         .app-header h1 {
-            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            font-size: 1.3rem;
             background: linear-gradient(90deg, #00d9ff, #00ff88);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -155,55 +152,53 @@
         .user-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .user-badge {
-            background: rgba(255,255,255,0.1);
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-        }
-
-        .user-badge.admin {
             background: rgba(0, 217, 255, 0.2);
             color: #00d9ff;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.75rem;
         }
 
         .logout-btn {
             background: rgba(255, 71, 87, 0.2);
             color: #ff6b6b;
             border: none;
-            padding: 8px 15px;
+            padding: 6px 12px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
         }
 
         /* Controls */
         .controls {
             display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 15px;
             flex-wrap: wrap;
             align-items: center;
         }
 
         .control-group {
             background: rgba(255,255,255,0.1);
-            padding: 12px 15px;
-            border-radius: 12px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .control-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #aaa;
+            white-space: nowrap;
         }
 
         input, select, button {
-            padding: 10px 15px;
+            padding: 8px 12px;
             border: none;
             border-radius: 8px;
             font-size: 16px;
@@ -223,6 +218,8 @@
 
         .btn-excel {
             background: linear-gradient(135deg, #2ed573, #1e90ff);
+            font-size: 0.8rem;
+            padding: 8px 15px;
         }
 
         .btn-secondary {
@@ -235,40 +232,46 @@
 
         /* Main content */
         .main-content {
-            display: grid;
-            grid-template-columns: 240px 1fr;
-            gap: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
         /* Sidebar */
         .sidebar {
             background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            padding: 15px;
+            border-radius: 12px;
+            padding: 12px;
         }
 
         .sidebar h2 {
-            font-size: 1rem;
-            margin-bottom: 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
             color: #00d9ff;
         }
 
         .add-employee {
             display: flex;
             gap: 8px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .add-employee input {
             flex: 1;
             min-width: 0;
+            padding: 10px 12px;
+        }
+
+        .add-employee button {
+            padding: 10px 15px;
+            font-size: 1.1rem;
         }
 
         .employee-list {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            max-height: 50vh;
+            gap: 6px;
+            max-height: 200px;
             overflow-y: auto;
         }
 
@@ -285,25 +288,28 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            font-size: 0.9rem;
         }
 
         .employee-color {
             width: 10px;
             height: 10px;
             border-radius: 50%;
+            flex-shrink: 0;
         }
 
         .delete-btn {
             background: transparent;
             color: #ff4757;
             padding: 5px 10px;
+            font-size: 1.1rem;
         }
 
-        /* Calendar */
+        /* ==================== CALENDAR - MOBILE OPTIMIZED ==================== */
         .calendar-section {
             background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            padding: 15px;
+            border-radius: 12px;
+            padding: 12px;
             overflow: hidden;
         }
 
@@ -311,41 +317,128 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .calendar-header h2 {
-            font-size: clamp(1rem, 3vw, 1.3rem);
+            font-size: 1.1rem;
+            font-weight: 600;
         }
 
+        .calendar-header button {
+            padding: 8px 15px;
+            font-size: 1rem;
+        }
+
+        /* Компактная легенда */
         .legend {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 15px;
-            padding: 10px;
+            gap: 6px;
+            margin-bottom: 12px;
+            padding: 8px;
             background: rgba(255,255,255,0.05);
             border-radius: 8px;
-            font-size: 0.75rem;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
+            font-size: 0.65rem;
         }
 
         .legend-color {
-            width: 20px;
-            height: 16px;
-            border-radius: 4px;
+            width: 16px;
+            height: 14px;
+            border-radius: 3px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             font-weight: bold;
         }
 
+        /* Мобильный календарь - карточки по дням */
+        .mobile-calendar {
+            display: none;
+        }
+
+        .day-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .day-card-header {
+            background: rgba(0, 217, 255, 0.15);
+            padding: 10px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .day-card-header.weekend {
+            background: rgba(255, 71, 87, 0.15);
+        }
+
+        .day-card-header.today {
+            background: rgba(0, 255, 136, 0.2);
+            border-left: 3px solid #00ff88;
+        }
+
+        .day-card-header .date {
+            font-size: 1rem;
+        }
+
+        .day-card-header .weekday {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        .day-card-body {
+            padding: 8px;
+        }
+
+        .day-employee-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 10px;
+            margin: 4px 0;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.05);
+            cursor: pointer;
+        }
+
+        .day-employee-row:active {
+            opacity: 0.7;
+        }
+
+        .day-employee-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .day-shift-value {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            min-width: 45px;
+            text-align: center;
+        }
+
+        .day-shift-value.empty {
+            background: rgba(255,255,255,0.1);
+            color: #666;
+        }
+
+        /* Десктопная таблица */
         .table-wrapper {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
@@ -359,24 +452,31 @@
 
         .schedule-table th,
         .schedule-table td {
-            padding: 6px 4px;
+            padding: 5px 3px;
             text-align: center;
             border: 1px solid rgba(255,255,255,0.1);
         }
 
         .schedule-table th {
             background: rgba(0, 217, 255, 0.2);
-            font-size: 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 600;
             position: sticky;
             top: 0;
+            z-index: 10;
         }
 
         .schedule-table th:first-child,
         .schedule-table td:first-child {
             position: sticky;
             left: 0;
-            z-index: 10;
+            z-index: 15;
             background: rgba(26, 26, 46, 0.98);
+        }
+
+        .schedule-table th:first-child {
+            z-index: 20;
+            background: rgba(0, 100, 150, 0.9);
         }
 
         .schedule-table th.weekend {
@@ -389,22 +489,25 @@
 
         .schedule-table td.employee-name {
             text-align: left;
-            font-size: 0.8rem;
-            min-width: 100px;
-            padding: 6px 8px;
+            font-size: 0.75rem;
+            min-width: 80px;
+            max-width: 100px;
+            padding: 5px 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .shift-cell {
             cursor: pointer;
-            min-width: 38px;
-            height: 34px;
-            font-size: 0.7rem;
-            font-weight: 500;
+            min-width: 32px;
+            height: 30px;
+            font-size: 0.6rem;
+            font-weight: 600;
         }
 
         .shift-cell.readonly {
             cursor: default;
-            opacity: 0.9;
         }
 
         .shift-work { background: linear-gradient(135deg, #00d9ff, #00a8cc) !important; color: #1a1a2e; }
@@ -418,39 +521,39 @@
 
         /* Stats */
         .stats-section {
-            margin-top: 20px;
             background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            padding: 15px;
+            border-radius: 12px;
+            padding: 12px;
         }
 
         .stats-section h2 {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             color: #00d9ff;
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
         }
 
         .stat-card {
             background: rgba(255,255,255,0.1);
-            padding: 15px;
+            padding: 12px 8px;
             border-radius: 10px;
             text-align: center;
         }
 
         .stat-card h3 {
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             color: #aaa;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
         }
 
         .stat-card .value {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: bold;
             background: linear-gradient(90deg, #00d9ff, #00ff88);
             -webkit-background-clip: text;
@@ -460,19 +563,19 @@
         .stats-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
         }
 
         .stats-table th,
         .stats-table td {
-            padding: 8px 6px;
+            padding: 8px 5px;
             text-align: left;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         .stats-table th {
             background: rgba(0, 217, 255, 0.1);
+            font-size: 0.7rem;
         }
 
         /* Modal */
@@ -483,7 +586,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.85);
+            background: rgba(0,0,0,0.9);
             justify-content: center;
             align-items: flex-end;
             z-index: 1000;
@@ -493,11 +596,12 @@
 
         .modal-content {
             background: #1a1a2e;
-            padding: 25px 20px;
+            padding: 20px 15px;
+            padding-bottom: calc(20px + env(safe-area-inset-bottom));
             border-radius: 20px 20px 0 0;
             width: 100%;
             max-width: 500px;
-            max-height: 90vh;
+            max-height: 85vh;
             overflow-y: auto;
             animation: slideUp 0.3s ease;
         }
@@ -509,27 +613,30 @@
 
         .modal-content h3 {
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
         }
 
         .modal-info {
             text-align: center;
-            color: #888;
-            margin-bottom: 20px;
+            color: #00d9ff;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            font-weight: 500;
         }
 
         .work-shift-form {
             background: rgba(255,255,255,0.05);
             padding: 15px;
             border-radius: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .modal-section-title {
             text-align: center;
             color: #aaa;
             margin-bottom: 12px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .hours-row {
@@ -541,27 +648,33 @@
         }
 
         .hours-row input {
-            width: 80px;
+            width: 90px;
             text-align: center;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             padding: 12px;
+            font-weight: bold;
+        }
+
+        .hours-row span {
+            color: #aaa;
+            font-size: 1rem;
         }
 
         .cleaning-options {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 8px;
-            justify-content: center;
-            flex-wrap: wrap;
             margin-bottom: 15px;
         }
 
         .cleaning-option {
-            padding: 10px 15px;
-            border-radius: 8px;
+            padding: 12px 8px;
+            border-radius: 10px;
             cursor: pointer;
             background: rgba(255,255,255,0.1);
             border: 2px solid transparent;
             font-size: 0.85rem;
+            text-align: center;
         }
 
         .cleaning-option.active {
@@ -582,13 +695,14 @@
         .save-work-btn {
             width: 100%;
             padding: 14px;
+            font-size: 1rem;
         }
 
         .divider {
             text-align: center;
-            color: #555;
-            margin: 20px 0;
-            font-size: 0.85rem;
+            color: #444;
+            margin: 15px 0;
+            font-size: 0.8rem;
         }
 
         .other-options {
@@ -598,68 +712,22 @@
         }
 
         .other-option {
-            padding: 12px;
+            padding: 14px 8px;
             border-radius: 10px;
             cursor: pointer;
             text-align: center;
             font-size: 0.8rem;
         }
 
-        .close-modal {
-            width: 100%;
-            margin-top: 10px;
-            padding: 14px;
-        }
-
-        /* Admin Panel */
-        .admin-section {
-            margin-top: 20px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            padding: 15px;
-        }
-
-        .admin-section h2 {
-            color: #ff6b6b;
-            margin-bottom: 15px;
-            font-size: 1rem;
-        }
-
-        .user-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .user-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255,255,255,0.1);
-            padding: 12px;
-            border-radius: 8px;
-        }
-
-        .user-item-info {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .user-item-name {
-            font-weight: 500;
-        }
-
-        .user-item-role {
-            font-size: 0.75rem;
-            color: #888;
-        }
-
-        .add-user-form {
+        .modal-buttons {
             display: grid;
-            grid-template-columns: 1fr 1fr auto;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
             margin-top: 15px;
+        }
+
+        .modal-buttons button {
+            padding: 14px;
         }
 
         /* Mobile tabs */
@@ -670,7 +738,8 @@
             left: 0;
             right: 0;
             background: rgba(26, 26, 46, 0.98);
-            padding: 10px 0;
+            padding: 8px 0;
+            padding-bottom: calc(8px + env(safe-area-inset-bottom));
             z-index: 100;
             border-top: 1px solid rgba(255,255,255,0.1);
         }
@@ -684,21 +753,28 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 8px 12px;
-            color: #888;
+            padding: 6px 15px;
+            color: #666;
             font-size: 0.65rem;
             cursor: pointer;
             border: none;
             background: none;
+            transition: color 0.2s;
         }
 
-        .mobile-tab.active { color: #00d9ff; }
-        .mobile-tab-icon { font-size: 1.3rem; margin-bottom: 2px; }
+        .mobile-tab.active { 
+            color: #00d9ff; 
+        }
+        
+        .mobile-tab-icon { 
+            font-size: 1.4rem; 
+            margin-bottom: 2px; 
+        }
 
         /* Toast */
         .toast {
             position: fixed;
-            bottom: 90px;
+            bottom: 80px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
             background: linear-gradient(135deg, #2ed573, #1e90ff);
@@ -706,8 +782,10 @@
             padding: 12px 20px;
             border-radius: 10px;
             font-weight: bold;
+            font-size: 0.9rem;
             transition: transform 0.3s;
             z-index: 2000;
+            white-space: nowrap;
         }
 
         .toast.show { transform: translateX(-50%) translateY(0); }
@@ -718,13 +796,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 40px;
+            padding: 30px;
         }
 
         .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(255,255,255,0.1);
+            width: 35px;
+            height: 35px;
+            border: 3px solid rgba(255,255,255,0.1);
             border-top-color: #00d9ff;
             border-radius: 50%;
             animation: spin 1s linear infinite;
@@ -734,24 +812,96 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Responsive */
-        @media (max-width: 900px) {
-            .main-content { grid-template-columns: 1fr; }
+        /* View toggle */
+        .view-toggle {
+            display: none;
+            gap: 5px;
+            margin-bottom: 12px;
+        }
+
+        .view-toggle button {
+            flex: 1;
+            padding: 10px;
+            font-size: 0.8rem;
+            background: rgba(255,255,255,0.1);
+            color: #aaa;
+        }
+
+        .view-toggle button.active {
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            color: #1a1a2e;
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 768px) {
             .mobile-tabs { display: block; }
             .section.hidden-mobile { display: none; }
-            .app-header { flex-direction: column; align-items: flex-start; }
+            
+            .view-toggle { display: flex; }
+            
+            .mobile-calendar.active { display: block; }
+            .table-wrapper.hidden { display: none; }
+            
+            .main-content {
+                gap: 10px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .controls {
+                justify-content: space-between;
+            }
+
+            .control-group {
+                flex: 1;
+                min-width: 0;
+                justify-content: center;
+            }
+
+            #monthPicker {
+                width: 100%;
+                max-width: 140px;
+            }
+
+            .other-options {
+                grid-template-columns: 1fr;
+            }
         }
 
-        @media (max-width: 480px) {
-            .controls { flex-direction: column; align-items: stretch; }
-            .add-user-form { grid-template-columns: 1fr; }
-            .other-options { grid-template-columns: 1fr; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-        }
+        @media (min-width: 769px) {
+            .app-screen {
+                padding: 20px;
+                padding-bottom: 30px;
+            }
 
-        @media (min-width: 901px) {
+            .main-content {
+                display: grid;
+                grid-template-columns: 260px 1fr;
+            }
+
             .modal { align-items: center; }
-            .modal-content { border-radius: 20px; }
+            .modal-content { 
+                border-radius: 20px; 
+                max-height: 90vh;
+            }
+
+            .calendar-header h2 {
+                font-size: 1.3rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .shift-cell {
+                min-width: 38px;
+                height: 34px;
+                font-size: 0.7rem;
+            }
         }
     </style>
 </head>
@@ -768,11 +918,11 @@
             <form id="loginForm">
                 <div class="form-group">
                     <label>Логин</label>
-                    <input type="text" id="loginUsername" placeholder="Введите логин" required>
+                    <input type="text" id="loginUsername" placeholder="admin" required autocomplete="username">
                 </div>
                 <div class="form-group">
                     <label>Пароль</label>
-                    <input type="password" id="loginPassword" placeholder="Введите пароль" required>
+                    <input type="password" id="loginPassword" placeholder="••••••" required autocomplete="current-password">
                 </div>
                 <button type="submit" class="login-btn">Войти</button>
             </form>
@@ -781,95 +931,85 @@
 
     <!-- Main App -->
     <div class="app-screen" id="appScreen">
-        <div class="container">
-            <header class="app-header">
-                <h1>📅 График смен</h1>
-                <div class="user-info">
-                    <span class="user-badge" id="userBadge">Загрузка...</span>
-                    <button class="logout-btn" onclick="logout()">Выйти</button>
-                </div>
-            </header>
-
-            <div class="controls">
-                <div class="control-group">
-                    <label>Месяц</label>
-                    <input type="month" id="monthPicker">
-                </div>
-                <div class="control-group" id="defaultHoursControl">
-                    <label>Часов по умолч.</label>
-                    <input type="number" id="defaultHours" min="1" max="24" value="10" style="width: 70px; text-align: center;">
-                </div>
-                <div class="control-group">
-                    <button onclick="exportToExcel()" class="btn-excel">📊 Excel</button>
-                </div>
+        <header class="app-header">
+            <h1>📅 График смен</h1>
+            <div class="user-info">
+                <span class="user-badge" id="userBadge">Админ</span>
+                <button class="logout-btn" onclick="logout()">Выйти</button>
             </div>
+        </header>
 
-            <div class="main-content">
-                <aside class="sidebar section" id="sectionEmployees">
-                    <h2>👥 Сотрудники</h2>
-                    <div class="add-employee" id="addEmployeeForm" style="display: none;">
-                        <input type="text" id="newEmployeeName" placeholder="Имя">
-                        <button onclick="addEmployee()">+</button>
-                    </div>
-                    <div class="employee-list" id="employeeList">
-                        <div class="loading"><div class="spinner"></div></div>
-                    </div>
-                </aside>
-
-                <main class="calendar-section section" id="sectionCalendar">
-                    <div class="calendar-header">
-                        <button onclick="changeMonth(-1)">◀</button>
-                        <h2 id="currentMonthDisplay"></h2>
-                        <button onclick="changeMonth(1)">▶</button>
-                    </div>
-
-                    <div class="legend">
-                        <div class="legend-item"><div class="legend-color shift-work">10</div><span>Часы</span></div>
-                        <div class="legend-item"><div class="legend-color shift-work-cleaning">У</div><span>+Уборка</span></div>
-                        <div class="legend-item"><div class="legend-color shift-work-fullCleaning">У1</div><span>+Полн.</span></div>
-                        <div class="legend-item"><div class="legend-color shift-off">В</div><span>Вых.</span></div>
-                        <div class="legend-item"><div class="legend-color shift-vacation">О</div><span>Отп.</span></div>
-                        <div class="legend-item"><div class="legend-color shift-sick">Б</div><span>Болн.</span></div>
-                    </div>
-
-                    <div class="table-wrapper">
-                        <table class="schedule-table">
-                            <thead id="tableHead"></thead>
-                            <tbody id="tableBody"></tbody>
-                        </table>
-                    </div>
-                </main>
+        <div class="controls">
+            <div class="control-group">
+                <label>Месяц</label>
+                <input type="month" id="monthPicker">
             </div>
+            <div class="control-group" id="defaultHoursControl">
+                <label>Часов</label>
+                <input type="number" id="defaultHours" min="1" max="24" value="10" style="width: 60px; text-align: center;">
+            </div>
+            <button onclick="exportToExcel()" class="btn-excel">📊 Excel</button>
+        </div>
 
-            <section class="stats-section section" id="sectionStats">
-                <h2>📊 Статистика</h2>
-                <div class="stats-grid" id="statsGrid"></div>
-                <div class="table-wrapper">
-                    <table class="stats-table">
-                        <thead>
-                            <tr><th>Сотрудник</th><th>Смен</th><th>Часов</th><th>У</th><th>У1</th><th>В</th><th>О</th><th>Б</th></tr>
-                        </thead>
-                        <tbody id="statsTableBody"></tbody>
+        <div class="main-content">
+            <aside class="sidebar section" id="sectionEmployees">
+                <h2>👥 Сотрудники</h2>
+                <div class="add-employee" id="addEmployeeForm">
+                    <input type="text" id="newEmployeeName" placeholder="Имя сотрудника">
+                    <button onclick="addEmployee()">+</button>
+                </div>
+                <div class="employee-list" id="employeeList">
+                    <div class="loading"><div class="spinner"></div></div>
+                </div>
+            </aside>
+
+            <main class="calendar-section section" id="sectionCalendar">
+                <div class="calendar-header">
+                    <button onclick="changeMonth(-1)">◀</button>
+                    <h2 id="currentMonthDisplay"></h2>
+                    <button onclick="changeMonth(1)">▶</button>
+                </div>
+
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-color shift-work">10</div><span>Часы</span></div>
+                    <div class="legend-item"><div class="legend-color shift-work-cleaning">У</div><span>Уборка</span></div>
+                    <div class="legend-item"><div class="legend-color shift-work-fullCleaning">У1</div><span>Полн.</span></div>
+                    <div class="legend-item"><div class="legend-color shift-off">В</div><span>Вых</span></div>
+                    <div class="legend-item"><div class="legend-color shift-vacation">О</div><span>Отп</span></div>
+                    <div class="legend-item"><div class="legend-color shift-sick">Б</div><span>Бол</span></div>
+                </div>
+
+                <!-- Переключатель вида -->
+                <div class="view-toggle">
+                    <button class="active" onclick="setView('cards')">📋 Карточки</button>
+                    <button onclick="setView('table')">📊 Таблица</button>
+                </div>
+
+                <!-- Мобильный вид - карточки по дням -->
+                <div class="mobile-calendar active" id="mobileCalendar"></div>
+
+                <!-- Десктопный вид - таблица -->
+                <div class="table-wrapper hidden" id="tableWrapper">
+                    <table class="schedule-table">
+                        <thead id="tableHead"></thead>
+                        <tbody id="tableBody"></tbody>
                     </table>
                 </div>
-            </section>
-
-            <!-- Admin Panel -->
-            <section class="admin-section section" id="adminSection" style="display: none;">
-                <h2>⚙️ Управление пользователями</h2>
-                <div class="user-list" id="userList"></div>
-                <div class="add-user-form">
-                    <input type="text" id="newUserName" placeholder="Имя">
-                    <input type="text" id="newUserLogin" placeholder="Логин">
-                    <input type="password" id="newUserPassword" placeholder="Пароль">
-                    <select id="newUserRole">
-                        <option value="viewer">Просмотр</option>
-                        <option value="admin">Админ</option>
-                    </select>
-                    <button onclick="addUser()">Добавить</button>
-                </div>
-            </section>
+            </main>
         </div>
+
+        <section class="stats-section section" id="sectionStats">
+            <h2>📊 Статистика</h2>
+            <div class="stats-grid" id="statsGrid"></div>
+            <div class="table-wrapper">
+                <table class="stats-table">
+                    <thead>
+                        <tr><th>Сотрудник</th><th>Смен</th><th>Часов</th><th>У</th><th>У1</th><th>В</th><th>О</th><th>Б</th></tr>
+                    </thead>
+                    <tbody id="statsTableBody"></tbody>
+                </table>
+            </div>
+        </section>
     </div>
 
     <!-- Mobile Tabs -->
@@ -884,33 +1024,30 @@
             <button class="mobile-tab" onclick="showSection('stats')">
                 <span class="mobile-tab-icon">📊</span><span>Статистика</span>
             </button>
-            <button class="mobile-tab" id="adminTab" onclick="showSection('admin')" style="display: none;">
-                <span class="mobile-tab-icon">⚙️</span><span>Админ</span>
-            </button>
         </div>
     </nav>
 
     <!-- Shift Modal -->
     <div class="modal" id="shiftModal">
         <div class="modal-content">
-            <h3>Редактирование смены</h3>
+            <h3>Редактирование</h3>
             <div class="modal-info" id="modalInfo"></div>
             
             <div class="work-shift-form">
                 <div class="modal-section-title">⏰ Рабочая смена</div>
                 <div class="hours-row">
                     <input type="number" id="modalHours" min="1" max="24" value="10" inputmode="numeric">
-                    <span style="color: #aaa">часов</span>
+                    <span>часов</span>
                 </div>
                 <div class="cleaning-options">
                     <div class="cleaning-option none active" onclick="selectCleaning('none')">Без уборки</div>
                     <div class="cleaning-option cleaning" onclick="selectCleaning('cleaning')">🧹 У</div>
                     <div class="cleaning-option fullCleaning" onclick="selectCleaning('fullCleaning')">🧽 У1</div>
                 </div>
-                <button class="save-work-btn" onclick="saveWorkShift()">✓ Записать</button>
+                <button class="save-work-btn" onclick="saveWorkShift()">✓ Сохранить</button>
             </div>
 
-            <div class="divider">или</div>
+            <div class="divider">— или отметить как —</div>
 
             <div class="other-options">
                 <div class="other-option shift-off" onclick="setDayType('off')">🏠 Выходной</div>
@@ -918,18 +1055,18 @@
                 <div class="other-option shift-sick" onclick="setDayType('sick')">🏥 Больничный</div>
             </div>
             
-            <button class="close-modal btn-danger" onclick="clearShift()">✖ Очистить</button>
-            <button class="close-modal btn-secondary" onclick="closeModal()">Отмена</button>
+            <div class="modal-buttons">
+                <button class="btn-danger" onclick="clearShift()">✖ Очистить</button>
+                <button class="btn-secondary" onclick="closeModal()">Отмена</button>
+            </div>
         </div>
     </div>
 
     <div class="toast" id="toast"></div>
 
     <script>
-        // ==================== CONFIG ====================
-        const API_URL = ''; // Оставить пустым для того же домена
-
-        // ==================== STATE ====================
+        const API_URL = '';
+        
         let currentUser = null;
         let token = null;
         let employees = [];
@@ -938,11 +1075,13 @@
         let currentDate = new Date();
         let selectedCell = null;
         let selectedCleaning = 'none';
-        let isMobile = window.innerWidth <= 900;
+        let isMobile = window.innerWidth <= 768;
+        let currentView = 'cards';
 
         const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
         const monthNamesShort = ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'];
         const dayNames = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+        const dayNamesFull = ['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'];
 
         // ==================== INIT ====================
         document.addEventListener('DOMContentLoaded', () => {
@@ -953,19 +1092,40 @@
         });
 
         function handleResize() {
-            isMobile = window.innerWidth <= 900;
+            const wasMobile = isMobile;
+            isMobile = window.innerWidth <= 768;
+            
             if (!isMobile) {
                 document.querySelectorAll('.section').forEach(s => s.classList.remove('hidden-mobile'));
+                setView('table');
+            } else if (!wasMobile && isMobile) {
+                setView('cards');
+            }
+        }
+
+        function setView(view) {
+            currentView = view;
+            const cards = document.getElementById('mobileCalendar');
+            const table = document.getElementById('tableWrapper');
+            const buttons = document.querySelectorAll('.view-toggle button');
+            
+            buttons.forEach(b => b.classList.remove('active'));
+            
+            if (view === 'cards') {
+                cards.classList.add('active');
+                table.classList.add('hidden');
+                buttons[0].classList.add('active');
+            } else {
+                cards.classList.remove('active');
+                table.classList.remove('hidden');
+                buttons[1].classList.add('active');
             }
         }
 
         // ==================== AUTH ====================
         async function checkAuth() {
             token = localStorage.getItem('token');
-            if (!token) {
-                showLogin();
-                return;
-            }
+            if (!token) { showLogin(); return; }
 
             try {
                 const res = await api('/api/auth/verify');
@@ -988,20 +1148,8 @@
             document.getElementById('appScreen').classList.add('active');
             if (isMobile) document.getElementById('mobileTabs').style.display = 'block';
             
-            updateUserUI();
+            document.getElementById('userBadge').textContent = currentUser.name;
             loadData();
-        }
-
-        function updateUserUI() {
-            const badge = document.getElementById('userBadge');
-            badge.textContent = currentUser.name;
-            badge.className = 'user-badge' + (currentUser.role === 'admin' ? ' admin' : '');
-
-            const isAdmin = currentUser.role === 'admin';
-            document.getElementById('addEmployeeForm').style.display = isAdmin ? 'flex' : 'none';
-            document.getElementById('adminSection').style.display = isAdmin ? 'block' : 'none';
-            document.getElementById('adminTab').style.display = isAdmin ? 'flex' : 'none';
-            document.getElementById('defaultHoursControl').style.display = isAdmin ? 'block' : 'none';
         }
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -1031,7 +1179,7 @@
                 errorDiv.style.display = 'none';
                 showApp();
             } catch (e) {
-                errorDiv.textContent = 'Ошибка соединения с сервером';
+                errorDiv.textContent = 'Ошибка соединения';
                 errorDiv.style.display = 'block';
             }
         });
@@ -1053,13 +1201,8 @@
                     ...options.headers
                 }
             });
-            
             const data = await res.json();
-            
-            if (!res.ok) {
-                throw new Error(data.error || 'Ошибка сервера');
-            }
-            
+            if (!res.ok) throw new Error(data.error || 'Ошибка');
             return data;
         }
 
@@ -1071,24 +1214,10 @@
                     api('/api/shifts'),
                     api('/api/settings')
                 ]);
-                
                 document.getElementById('defaultHours').value = settings.defaultHours || 10;
                 render();
-                
-                if (currentUser.role === 'admin') {
-                    loadUsers();
-                }
             } catch (e) {
-                showToast('Ошибка загрузки: ' + e.message, true);
-            }
-        }
-
-        async function loadUsers() {
-            try {
-                const users = await api('/api/users');
-                renderUsers(users);
-            } catch (e) {
-                console.error(e);
+                showToast('Ошибка: ' + e.message, true);
             }
         }
 
@@ -1106,7 +1235,7 @@
                 employees.push(emp);
                 input.value = '';
                 render();
-                showToast('Добавлен: ' + name);
+                showToast('✓ ' + name);
             } catch (e) {
                 showToast(e.message, true);
             }
@@ -1114,13 +1243,10 @@
 
         async function deleteEmployee(id) {
             if (!confirm('Удалить сотрудника?')) return;
-
             try {
                 await api('/api/employees/' + id, { method: 'DELETE' });
                 employees = employees.filter(e => e.id !== id);
-                Object.keys(shifts).forEach(k => {
-                    if (k.startsWith(id + '_')) delete shifts[k];
-                });
+                Object.keys(shifts).filter(k => k.startsWith(id + '_')).forEach(k => delete shifts[k]);
                 render();
                 showToast('Удалено');
             } catch (e) {
@@ -1135,16 +1261,9 @@
         // ==================== SHIFTS ====================
         async function saveShift(key, data) {
             try {
-                await api('/api/shifts', {
-                    method: 'POST',
-                    body: JSON.stringify({ key, data })
-                });
-                
-                if (data === null) {
-                    delete shifts[key];
-                } else {
-                    shifts[key] = data;
-                }
+                await api('/api/shifts', { method: 'POST', body: JSON.stringify({ key, data }) });
+                if (data === null) delete shifts[key];
+                else shifts[key] = data;
                 render();
             } catch (e) {
                 showToast(e.message, true);
@@ -1153,16 +1272,9 @@
 
         async function saveWorkShift() {
             if (!selectedCell) return;
-            
             const hours = parseInt(document.getElementById('modalHours').value) || 10;
             const key = `${selectedCell.empId}_${selectedCell.year}-${selectedCell.month}-${selectedCell.day}`;
-            
-            await saveShift(key, {
-                type: 'work',
-                hours,
-                cleaning: selectedCleaning === 'none' ? null : selectedCleaning
-            });
-            
+            await saveShift(key, { type: 'work', hours, cleaning: selectedCleaning === 'none' ? null : selectedCleaning });
             closeModal();
         }
 
@@ -1182,138 +1294,72 @@
 
         // ==================== SETTINGS ====================
         document.getElementById('defaultHours').addEventListener('change', async function() {
-            if (currentUser.role !== 'admin') return;
             try {
                 settings.defaultHours = parseInt(this.value) || 10;
-                await api('/api/settings', {
-                    method: 'POST',
-                    body: JSON.stringify({ defaultHours: settings.defaultHours })
-                });
-            } catch (e) {
-                showToast(e.message, true);
-            }
+                await api('/api/settings', { method: 'POST', body: JSON.stringify({ defaultHours: settings.defaultHours }) });
+            } catch (e) { showToast(e.message, true); }
         });
-
-        // ==================== USERS ====================
-        function renderUsers(users) {
-            const list = document.getElementById('userList');
-            list.innerHTML = users.map(u => `
-                <div class="user-item">
-                    <div class="user-item-info">
-                        <span class="user-item-name">${u.name}</span>
-                        <span class="user-item-role">${u.username} • ${u.role === 'admin' ? 'Администратор' : 'Просмотр'}</span>
-                    </div>
-                    ${u.id !== currentUser.id ? `<button class="btn-danger" onclick="deleteUser('${u.id}')" style="padding:6px 12px">✕</button>` : ''}
-                </div>
-            `).join('');
-        }
-
-        async function addUser() {
-            const name = document.getElementById('newUserName').value.trim();
-            const username = document.getElementById('newUserLogin').value.trim();
-            const password = document.getElementById('newUserPassword').value;
-            const role = document.getElementById('newUserRole').value;
-
-            if (!name || !username || !password) {
-                showToast('Заполните все поля', true);
-                return;
-            }
-
-            try {
-                await api('/api/users', {
-                    method: 'POST',
-                    body: JSON.stringify({ name, username, password, role })
-                });
-                
-                document.getElementById('newUserName').value = '';
-                document.getElementById('newUserLogin').value = '';
-                document.getElementById('newUserPassword').value = '';
-                
-                loadUsers();
-                showToast('Пользователь создан');
-            } catch (e) {
-                showToast(e.message, true);
-            }
-        }
-
-        async function deleteUser(id) {
-            if (!confirm('Удалить пользователя?')) return;
-            try {
-                await api('/api/users/' + id, { method: 'DELETE' });
-                loadUsers();
-                showToast('Удалено');
-            } catch (e) {
-                showToast(e.message, true);
-            }
-        }
 
         // ==================== RENDER ====================
         function render() {
             renderEmployeeList();
             renderCalendar();
+            renderMobileCalendar();
             renderStats();
         }
 
         function renderEmployeeList() {
             const list = document.getElementById('employeeList');
-            const isAdmin = currentUser?.role === 'admin';
-            
             if (!employees.length) {
-                list.innerHTML = '<p style="color:#888;text-align:center;padding:20px">Нет сотрудников</p>';
+                list.innerHTML = '<p style="color:#666;text-align:center;padding:15px;font-size:0.85rem">Нет сотрудников</p>';
                 return;
             }
-            
             list.innerHTML = employees.map(e => `
                 <div class="employee-item">
                     <div class="employee-info">
                         <div class="employee-color" style="background:${e.color}"></div>
                         <span>${e.name}</span>
                     </div>
-                    ${isAdmin ? `<button class="delete-btn" onclick="deleteEmployee('${e.id}')">×</button>` : ''}
+                    <button class="delete-btn" onclick="deleteEmployee('${e.id}')">×</button>
                 </div>
             `).join('');
         }
 
         function initMonthPicker() {
             const picker = document.getElementById('monthPicker');
-            const y = currentDate.getFullYear();
-            const m = String(currentDate.getMonth() + 1).padStart(2, '0');
-            picker.value = `${y}-${m}`;
+            picker.value = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
             picker.addEventListener('change', function() {
-                const [year, month] = this.value.split('-');
-                currentDate = new Date(year, month - 1, 1);
-                renderCalendar();
-                renderStats();
+                const [y, m] = this.value.split('-');
+                currentDate = new Date(y, m - 1, 1);
+                render();
             });
         }
 
         function changeMonth(delta) {
             currentDate.setMonth(currentDate.getMonth() + delta);
-            const y = currentDate.getFullYear();
-            const m = String(currentDate.getMonth() + 1).padStart(2, '0');
-            document.getElementById('monthPicker').value = `${y}-${m}`;
-            renderCalendar();
-            renderStats();
+            document.getElementById('monthPicker').value = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
+            render();
         }
 
         function getDaysInMonth(y, m) { return new Date(y, m + 1, 0).getDate(); }
         function getDayOfWeek(y, m, d) { return new Date(y, m, d).getDay(); }
 
         function getShiftDisplay(data) {
-            if (!data) return { label: '', class: '' };
+            if (!data) return { label: '', class: '', full: '—' };
             if (data.type === 'work') {
                 let label = data.hours.toString();
                 let cls = 'shift-work';
-                if (data.cleaning === 'cleaning') { label += '/У'; cls = 'shift-work-cleaning'; }
-                else if (data.cleaning === 'fullCleaning') { label += '/У1'; cls = 'shift-work-fullCleaning'; }
-                return { label, class: cls };
+                let full = data.hours + 'ч';
+                if (data.cleaning === 'cleaning') { label += '/У'; cls = 'shift-work-cleaning'; full += ' +У'; }
+                else if (data.cleaning === 'fullCleaning') { label += '/У1'; cls = 'shift-work-fullCleaning'; full += ' +У1'; }
+                return { label, class: cls, full };
             }
             const map = {
-                'off': { label: 'В', class: 'shift-off' },
-                'vacation': { label: 'О', class: 'shift-vacation' },
-                'sick': { label: 'Б', class: 'shift-sick' }
+                'off': { label: 'В', class: 'shift-off', full: 'Выходной' },
+                'vacation': { label: 'О', class: 'shift-vacation', full: 'Отпуск' },
+                'sick': { label: 'Б', class: 'shift-sick', full: 'Больничный' }
             };
-            return map[data.type] || { label: '', class: '' };
+            return map[data.type] || { label: '', class: '', full: '—' };
         }
 
         function renderCalendar() {
@@ -1321,7 +1367,6 @@
             const month = currentDate.getMonth();
             const days = getDaysInMonth(year, month);
             const today = new Date();
-            const isAdmin = currentUser?.role === 'admin';
 
             document.getElementById('currentMonthDisplay').textContent = 
                 isMobile ? `${monthNamesShort[month]} ${year}` : `${monthNames[month]} ${year}`;
@@ -1336,29 +1381,76 @@
             head += '<th>Σ</th></tr>';
             document.getElementById('tableHead').innerHTML = head;
 
-            let body = '';
             if (!employees.length) {
-                body = `<tr><td colspan="${days + 2}" style="text-align:center;padding:30px;color:#888">Добавьте сотрудников</td></tr>`;
-            } else {
-                employees.forEach(emp => {
-                    body += `<tr><td class="employee-name"><span style="color:${emp.color}">●</span> ${emp.name}</td>`;
-                    let total = 0;
-                    for (let d = 1; d <= days; d++) {
-                        const dow = getDayOfWeek(year, month, d);
-                        const isWeekend = dow === 0 || dow === 6;
-                        const isToday = today.getDate() === d && today.getMonth() === month && today.getFullYear() === year;
-                        const key = `${emp.id}_${year}-${month}-${d}`;
-                        const shift = shifts[key];
-                        const disp = getShiftDisplay(shift);
-                        if (shift?.type === 'work') total += shift.hours;
-                        
-                        const onclick = isAdmin ? `onclick="openShiftModal('${emp.id}',${year},${month},${d})"` : '';
-                        body += `<td class="shift-cell ${disp.class} ${isWeekend ? 'weekend' : ''} ${isToday ? 'today' : ''} ${!isAdmin ? 'readonly' : ''}" ${onclick}>${disp.label}</td>`;
-                    }
-                    body += `<td><strong>${total}</strong></td></tr>`;
-                });
+                document.getElementById('tableBody').innerHTML = `<tr><td colspan="${days + 2}" style="text-align:center;padding:25px;color:#666">Добавьте сотрудников</td></tr>`;
+                return;
             }
+
+            let body = '';
+            employees.forEach(emp => {
+                body += `<tr><td class="employee-name"><span style="color:${emp.color}">●</span> ${emp.name}</td>`;
+                let total = 0;
+                for (let d = 1; d <= days; d++) {
+                    const dow = getDayOfWeek(year, month, d);
+                    const isWeekend = dow === 0 || dow === 6;
+                    const isToday = today.getDate() === d && today.getMonth() === month && today.getFullYear() === year;
+                    const key = `${emp.id}_${year}-${month}-${d}`;
+                    const shift = shifts[key];
+                    const disp = getShiftDisplay(shift);
+                    if (shift?.type === 'work') total += shift.hours;
+                    
+                    body += `<td class="shift-cell ${disp.class} ${isWeekend ? 'weekend' : ''} ${isToday ? 'today' : ''}" 
+                        onclick="openShiftModal('${emp.id}',${year},${month},${d})">${disp.label}</td>`;
+                }
+                body += `<td><strong>${total}</strong></td></tr>`;
+            });
             document.getElementById('tableBody').innerHTML = body;
+        }
+
+        function renderMobileCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const days = getDaysInMonth(year, month);
+            const today = new Date();
+
+            if (!employees.length) {
+                document.getElementById('mobileCalendar').innerHTML = '<p style="text-align:center;padding:30px;color:#666">Добавьте сотрудников</p>';
+                return;
+            }
+
+            let html = '';
+            for (let d = 1; d <= days; d++) {
+                const dow = getDayOfWeek(year, month, d);
+                const isWeekend = dow === 0 || dow === 6;
+                const isToday = today.getDate() === d && today.getMonth() === month && today.getFullYear() === year;
+
+                let headerClass = isToday ? 'today' : (isWeekend ? 'weekend' : '');
+                
+                html += `<div class="day-card">
+                    <div class="day-card-header ${headerClass}">
+                        <span class="date">${d} ${monthNamesShort[month]}</span>
+                        <span class="weekday">${dayNamesFull[dow]}</span>
+                    </div>
+                    <div class="day-card-body">`;
+
+                employees.forEach(emp => {
+                    const key = `${emp.id}_${year}-${month}-${d}`;
+                    const shift = shifts[key];
+                    const disp = getShiftDisplay(shift);
+                    
+                    html += `<div class="day-employee-row" onclick="openShiftModal('${emp.id}',${year},${month},${d})">
+                        <div class="day-employee-name">
+                            <div class="employee-color" style="background:${emp.color}"></div>
+                            <span>${emp.name}</span>
+                        </div>
+                        <div class="day-shift-value ${disp.class || 'empty'}">${disp.full}</div>
+                    </div>`;
+                });
+
+                html += '</div></div>';
+            }
+
+            document.getElementById('mobileCalendar').innerHTML = html;
         }
 
         function renderStats() {
@@ -1379,9 +1471,7 @@
                             s.shifts++;
                             if (shift.cleaning === 'cleaning') s.cleaning++;
                             else if (shift.cleaning === 'fullCleaning') s.fullCleaning++;
-                        } else {
-                            s[shift.type]++;
-                        }
+                        } else s[shift.type]++;
                     }
                 }
                 totals.hours += s.hours;
@@ -1416,11 +1506,9 @@
         }
 
         function openShiftModal(empId, year, month, day) {
-            if (currentUser?.role !== 'admin') return;
             selectedCell = { empId, year, month, day };
-            
             const emp = employees.find(e => e.id === empId);
-            document.getElementById('modalInfo').textContent = `${emp.name} — ${day} ${monthNamesShort[month]} ${year}`;
+            document.getElementById('modalInfo').textContent = `${emp.name} — ${day} ${monthNamesShort[month]}`;
             
             const key = `${empId}_${year}-${month}-${day}`;
             const shift = shifts[key];
@@ -1434,7 +1522,7 @@
             }
             
             document.getElementById('shiftModal').classList.add('active');
-            setTimeout(() => document.getElementById('modalHours').select(), 100);
+            setTimeout(() => document.getElementById('modalHours').select(), 150);
         }
 
         function closeModal() {
@@ -1456,7 +1544,7 @@
             document.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.section').forEach(s => s.classList.add('hidden-mobile'));
             
-            const map = { calendar: 'sectionCalendar', employees: 'sectionEmployees', stats: 'sectionStats', admin: 'adminSection' };
+            const map = { calendar: 'sectionCalendar', employees: 'sectionEmployees', stats: 'sectionStats' };
             document.getElementById(map[section]).classList.remove('hidden-mobile');
             document.querySelector(`.mobile-tab[onclick="showSection('${section}')"]`).classList.add('active');
         }
@@ -1467,7 +1555,7 @@
             toast.textContent = msg;
             toast.className = 'toast' + (isError ? ' error' : '');
             toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
+            setTimeout(() => toast.classList.remove('show'), 2500);
         }
 
         // ==================== EXPORT ====================
@@ -1477,7 +1565,6 @@
             const days = getDaysInMonth(year, month);
             const wb = XLSX.utils.book_new();
 
-            // Sheet 1
             const data = [[`График смен - ${monthNames[month]} ${year}`], []];
             const header = ['Сотрудник'];
             for (let d = 1; d <= days; d++) header.push(`${d} ${dayNames[getDayOfWeek(year, month, d)]}`);
@@ -1497,17 +1584,13 @@
             });
 
             const ws = XLSX.utils.aoa_to_sheet(data);
-            ws['!cols'] = [{ wch: 20 }, ...Array(days).fill({ wch: 6 }), { wch: 8 }];
+            ws['!cols'] = [{ wch: 18 }, ...Array(days).fill({ wch: 5 }), { wch: 7 }];
             XLSX.utils.book_append_sheet(wb, ws, 'График');
-
             XLSX.writeFile(wb, `Смены_${monthNamesShort[month]}_${year}.xlsx`);
-            showToast('📊 Excel сохранен');
+            showToast('📊 Сохранено');
         }
 
-        // ==================== KEYBOARD ====================
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') closeModal();
-        });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
     </script>
 </body>
 </html>
