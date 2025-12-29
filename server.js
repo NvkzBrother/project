@@ -2,60 +2,70 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
-const fs = require('fs');
-const path = require('path');
+const mongoose = require('mongoose');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const JWT_SECRET = process.env.JWT_SECRET || 'shift-scheduler-secret-key-2024';
+const JWT_SECRET = process.env.JWT_SECRET || 'shift-scheduler-secret-2024';
 
+// MongoDB подключение
+const MONGODB_URI = process.env.MONGODB_URI || 'ваша_строка_подключения_сюда';
+
+mongoose.connect(MONGODB_URI)
+    .then(() => console.log('✅ MongoDB подключена'))
+    .catch(err => console.error('❌ Ошибка MongoDB:', err));
+
+// Схемы MongoDB
+const SettingsSchema = new mongoose.Schema({
+    key: { type: String, unique: true },
+    adminUsername: String,
+    adminPassword: String,
+    adminName: String
+});
+
+const EmployeeSchema = new mongoose.Schema({
+    name: String,
+    color: String,
+    createdAt: { type: Date, default: Date.now }
+});
+
+const ShiftSchema = new mongoose.Schema({
+    key: { type: String, unique: true }, // формат: empId_year-month-day
+    type: String, // 'work', 'off', 'vacation', 'sick'
+    hours: Number,
+    cleaning: String // null, 'cleaning', 'fullCleaning'
+});
+
+const Settings = mongoose.model('Settings', SettingsSchema);
+const Employee = mongoose.model('Employee', EmployeeSchema);
+const Shift = mongoose.model('Shift', ShiftSchema);
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
-const DB_PATH = path.join(__dirname, 'data', 'database.json');
-
-function initDatabase() {
-    const dataDir = path.join(__dirname, 'data');
-    if (!fs.existsSync(dataDir)) {
-        fs.mkdirSync(dataDir, { recursive: true });
-    }
-    if (!fs.existsSync(DB_PATH)) {
-        const initialData = {
-            users: [{
-                id: '1',
-                username: 'admin',
-                password: bcrypt.hashSync('admin123', 10),
-                role: 'admin',
-                name: 'Администратор'
-            }],
-            employees: [],
-            shifts: {},
-            settings: { defaultHours: 10 }
-        };
-        saveDatabase(initialData);
-        console.log('База данных создана. Логин: admin, Пароль: admin123');
-    }
-}
-
-function readDatabase() {
+// Инициализация админа
+async function initAdmin() {
     try {
-        return JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-    } catch (e) {
-        return null;
+        let settings = await Settings.findOne({ key: 'main' });
+        if (!settings) {
+            settings = new Settings({
+                key: 'main',
+                adminUsername: 'admin',
+                adminPassword: bcrypt.hashSync('admin123', 10),
+                adminName: 'Администратор'
+            });
+            await settings.save();
+            console.log('✅ Админ создан: admin / admin123');
+        }
+    } catch (err) {
+        console.error('Ошибка инициализации:', err);
     }
 }
 
-function saveDatabase(data) {
-    try {
-        fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
-        return true;
-    } catch (e) {
-        return false;
-    }
-}
-
-function authenticateToken(req, res, next) {
+// Авторизация middleware
+function auth(req, res, next) {
     const token = req.headers['authorization']?.split(' ')[1];
     if (!token) return res.status(401).json({ error: 'Требуется авторизация' });
     
@@ -66,141 +76,140 @@ function authenticateToken(req, res, next) {
     });
 }
 
-function requireAdmin(req, res, next) {
-    if (req.user.role !== 'admin') {
-        return res.status(403).json({ error: 'Требуются права администратора' });
-    }
-    next();
-}
+// ==================== AUTH ====================
 
-// Auth
-app.post('/api/auth/login', (req, res) => {
-    const { username, password } = req.body;
-    if (!username || !password) {
-        return res.status(400).json({ error: 'Введите логин и пароль' });
+app.post('/api/auth/login', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        const settings = await Settings.findOne({ key: 'main' });
+        
+        if (!settings || username !== settings.adminUsername || 
+            !bcrypt.compareSync(password, settings.adminPassword)) {
+            return res.status(401).json({ error: 'Неверный логин или пароль' });
+        }
+        
+        const token = jwt.sign(
+            { username, name: settings.adminName, role: 'admin' },
+            JWT_SECRET,
+            { expiresIn: '30d' }
+        );
+        
+        res.json({ 
+            token, 
+            user: { username, name: settings.adminName, role: 'admin' } 
+        });
+    } catch (err) {
+        res.status(500).json({ error: 'Ошибка сервера' });
     }
-    
-    const db = readDatabase();
-    const user = db.users.find(u => u.username === username);
-    
-    if (!user || !bcrypt.compareSync(password, user.password)) {
-        return res.status(401).json({ error: 'Неверный логин или пароль' });
-    }
-    
-    const token = jwt.sign(
-        { id: user.id, username: user.username, role: user.role, name: user.name },
-        JWT_SECRET,
-        { expiresIn: '7d' }
-    );
-    
-    res.json({ token, user: { id: user.id, username: user.username, role: user.role, name: user.name } });
 });
 
-app.get('/api/auth/verify', authenticateToken, (req, res) => {
+app.get('/api/auth/verify', auth, (req, res) => {
     res.json({ user: req.user });
 });
 
-// Users
-app.get('/api/users', authenticateToken, requireAdmin, (req, res) => {
-    const db = readDatabase();
-    res.json(db.users.map(u => ({ id: u.id, username: u.username, role: u.role, name: u.name })));
-});
+// ==================== EMPLOYEES ====================
 
-app.post('/api/users', authenticateToken, requireAdmin, (req, res) => {
-    const { username, password, role, name } = req.body;
-    if (!username || !password || !name) {
-        return res.status(400).json({ error: 'Заполните все поля' });
+app.get('/api/employees', auth, async (req, res) => {
+    try {
+        const employees = await Employee.find().sort({ createdAt: 1 });
+        res.json(employees.map(e => ({
+            id: e._id.toString(),
+            name: e.name,
+            color: e.color
+        })));
+    } catch (err) {
+        res.status(500).json({ error: 'Ошибка сервера' });
     }
-    
-    const db = readDatabase();
-    if (db.users.find(u => u.username === username)) {
-        return res.status(400).json({ error: 'Пользователь уже существует' });
+});
+
+app.post('/api/employees', auth, async (req, res) => {
+    try {
+        const { name } = req.body;
+        if (!name) return res.status(400).json({ error: 'Введите имя' });
+        
+        const count = await Employee.countDocuments();
+        const colors = ['#ff6b6b','#4ecdc4','#45b7d1','#96ceb4','#ffeaa7','#fd79a8','#a29bfe','#6c5ce7'];
+        
+        const employee = new Employee({
+            name,
+            color: colors[count % colors.length]
+        });
+        
+        await employee.save();
+        
+        res.json({
+            id: employee._id.toString(),
+            name: employee.name,
+            color: employee.color
+        });
+    } catch (err) {
+        res.status(500).json({ error: 'Ошибка сервера' });
     }
-    
-    const newUser = {
-        id: Date.now().toString(),
-        username,
-        password: bcrypt.hashSync(password, 10),
-        role: role || 'viewer',
-        name
-    };
-    
-    db.users.push(newUser);
-    saveDatabase(db);
-    res.json({ id: newUser.id, username: newUser.username, role: newUser.role, name: newUser.name });
 });
 
-app.delete('/api/users/:id', authenticateToken, requireAdmin, (req, res) => {
-    if (req.params.id === req.user.id) {
-        return res.status(400).json({ error: 'Нельзя удалить себя' });
+app.delete('/api/employees/:id', auth, async (req, res) => {
+    try {
+        await Employee.findByIdAndDelete(req.params.id);
+        // Удаляем все смены этого сотрудника
+        await Shift.deleteMany({ key: { $regex: `^${req.params.id}_` } });
+        res.json({ ok: true });
+    } catch (err) {
+        res.status(500).json({ error: 'Ошибка сервера' });
     }
-    
-    const db = readDatabase();
-    db.users = db.users.filter(u => u.id !== req.params.id);
-    saveDatabase(db);
-    res.json({ message: 'Удалено' });
 });
 
-// Employees
-app.get('/api/employees', authenticateToken, (req, res) => {
-    res.json(readDatabase().employees || []);
+// ==================== SHIFTS ====================
+
+app.get('/api/shifts', auth, async (req, res) => {
+    try {
+        const shifts = await Shift.find();
+        const result = {};
+        shifts.forEach(s => {
+            result[s.key] = {
+                type: s.type,
+                hours: s.hours,
+                cleaning: s.cleaning
+            };
+        });
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({ error: 'Ошибка сервера' });
+    }
 });
 
-app.post('/api/employees', authenticateToken, requireAdmin, (req, res) => {
-    const { name, color } = req.body;
-    if (!name) return res.status(400).json({ error: 'Введите имя' });
-    
-    const db = readDatabase();
-    const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#fd79a8', '#a29bfe'];
-    const newEmp = {
-        id: Date.now().toString(),
-        name,
-        color: color || colors[db.employees.length % colors.length]
-    };
-    
-    db.employees.push(newEmp);
-    saveDatabase(db);
-    res.json(newEmp);
+app.post('/api/shifts', auth, async (req, res) => {
+    try {
+        const { key, data } = req.body;
+        
+        if (data === null) {
+            await Shift.findOneAndDelete({ key });
+        } else {
+            await Shift.findOneAndUpdate(
+                { key },
+                { key, type: data.type, hours: data.hours, cleaning: data.cleaning },
+                { upsert: true, new: true }
+            );
+        }
+        
+        res.json({ ok: true });
+    } catch (err) {
+        res.status(500).json({ error: 'Ошибка сервера' });
+    }
 });
 
-app.delete('/api/employees/:id', authenticateToken, requireAdmin, (req, res) => {
-    const db = readDatabase();
-    db.employees = db.employees.filter(e => e.id !== req.params.id);
-    Object.keys(db.shifts).forEach(k => {
-        if (k.startsWith(req.params.id + '_')) delete db.shifts[k];
+// ==================== SETTINGS ====================
+
+app.get('/api/settings', auth, async (req, res) => {
+    res.json({ defaultHours: 10 });
+});
+
+app.post('/api/settings', auth, async (req, res) => {
+    res.json({ defaultHours: 10 });
+});
+
+// Запуск
+initAdmin().then(() => {
+    app.listen(PORT, () => {
+        console.log(`🚀 Сервер запущен на порту ${PORT}`);
     });
-    saveDatabase(db);
-    res.json({ message: 'Удалено' });
-});
-
-// Shifts
-app.get('/api/shifts', authenticateToken, (req, res) => {
-    res.json(readDatabase().shifts || {});
-});
-
-app.post('/api/shifts', authenticateToken, requireAdmin, (req, res) => {
-    const { key, data } = req.body;
-    const db = readDatabase();
-    if (data === null) delete db.shifts[key];
-    else db.shifts[key] = data;
-    saveDatabase(db);
-    res.json({ success: true });
-});
-
-// Settings
-app.get('/api/settings', authenticateToken, (req, res) => {
-    res.json(readDatabase().settings || { defaultHours: 10 });
-});
-
-app.post('/api/settings', authenticateToken, requireAdmin, (req, res) => {
-    const db = readDatabase();
-    db.settings = { ...db.settings, ...req.body };
-    saveDatabase(db);
-    res.json(db.settings);
-});
-
-initDatabase();
-
-app.listen(PORT, () => {
-    console.log(`Сервер запущен на порту ${PORT}`);
 });
