@@ -358,12 +358,14 @@
         }
 
         /* Table */
-        .table-wrapper {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            margin: 0 -10px;
-            padding: 0 10px;
-        }
+        .table-wrapper {/* ===== TABLE GRID (КВАДРАТИКИ) ===== */
+.schedule-table {
+    border-collapse: collapse;
+}
+.schedule-table th,
+.schedule-table td.shift-cell:not(.shift-work):not(.shift-off):not(.shift-vacation):not(.shift-sick):not(.shift-work-cleaning):not(.shift-work-fullCleaning) {
+    background: rgba(255,255,255,0.03);
+}
 
         /* ===== FIXED NAME COLUMN ===== */
 .schedule-table td.employee-name {
