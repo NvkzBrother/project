@@ -1176,13 +1176,15 @@
         }
 
         function showApp() {
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('appScreen').classList.add('active');
-            if (isMobile) document.getElementById('mobileTabs').style.display = 'block';
-            document.getElementById('userBadge').textContent = currentUser.name;
-            loadData();
-        }
-
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('appScreen').classList.add('active');
+    if (isMobile) {
+        document.getElementById('mobileTabs').style.display = 'block';
+        showSection('calendar'); // 👈 ГРАФИК ПО УМОЛЧАНИЮ
+    }
+    document.getElementById('userBadge').textContent = currentUser.name;
+    loadData();
+}
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const username = document.getElementById('loginUsername').value;
