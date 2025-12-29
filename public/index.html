@@ -409,22 +409,32 @@
             background: rgba(255, 71, 87, 0.08);
         }
 
-        /* ИЗМЕНЕНО: Ячейка с именем сотрудника */
+        /* Ячейка с именем сотрудника - кликабельная */
         .schedule-table td.employee-name {
             text-align: left;
-            font-size: 0.55rem;              /* уменьшен шрифт */
+            font-size: 0.55rem;
             font-weight: 500;
-            width: 65px;                     /* фиксированная ширина */
+            width: 65px;
             min-width: 65px;
             max-width: 65px;
             padding: 3px 5px;
-            white-space: normal;             /* разрешаем перенос на 2 строки */
+            white-space: normal;
             word-wrap: break-word;
             word-break: break-word;
-            line-height: 1.15;               /* межстрочный интервал */
+            line-height: 1.15;
             vertical-align: middle;
-            height: 34px;                    /* фиксированная высота */
+            height: 34px;
             overflow: hidden;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .schedule-table td.employee-name:hover {
+            background: rgba(0, 217, 255, 0.2);
+        }
+
+        .schedule-table td.employee-name:active {
+            background: rgba(0, 217, 255, 0.3);
         }
 
         .shift-cell {
@@ -688,6 +698,183 @@
             font-size: 0.85rem;
         }
 
+        /* ==================== EMPLOYEE CALENDAR MODAL ==================== */
+        .employee-modal .modal-content {
+            max-width: 360px;
+            max-height: 90vh;
+        }
+
+        .employee-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .employee-modal-header .emp-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+        }
+
+        .employee-modal-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .employee-month-title {
+            text-align: center;
+            color: #00d9ff;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .employee-stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .emp-stat {
+            background: rgba(255,255,255,0.1);
+            padding: 8px 4px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .emp-stat-label {
+            font-size: 0.55rem;
+            color: #888;
+            margin-bottom: 2px;
+        }
+
+        .emp-stat-value {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #00d9ff;
+        }
+
+        /* Компактный календарь */
+        .emp-calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 3px;
+            margin-bottom: 12px;
+        }
+
+        .emp-calendar-header {
+            font-size: 0.6rem;
+            color: #888;
+            text-align: center;
+            padding: 4px 0;
+            font-weight: 600;
+        }
+
+        .emp-calendar-header.weekend {
+            color: #ff6b6b;
+        }
+
+        .emp-calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            font-size: 0.6rem;
+            background: rgba(255,255,255,0.05);
+            cursor: pointer;
+            transition: transform 0.15s;
+            position: relative;
+        }
+
+        .emp-calendar-day:active {
+            transform: scale(0.9);
+        }
+
+        .emp-calendar-day.empty {
+            background: transparent;
+            cursor: default;
+        }
+
+        .emp-calendar-day .day-num {
+            font-weight: 600;
+            font-size: 0.65rem;
+            line-height: 1;
+        }
+
+        .emp-calendar-day .day-shift {
+            font-size: 0.5rem;
+            font-weight: bold;
+            margin-top: 1px;
+        }
+
+        .emp-calendar-day.shift-work { 
+            background: linear-gradient(135deg, #00d9ff, #00a8cc); 
+            color: #1a1a2e; 
+        }
+        .emp-calendar-day.shift-work-cleaning { 
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7); 
+            color: #fff; 
+        }
+        .emp-calendar-day.shift-work-fullCleaning { 
+            background: linear-gradient(135deg, #fd79a8, #e84393); 
+            color: #fff; 
+        }
+        .emp-calendar-day.shift-off { 
+            background: linear-gradient(135deg, #636e72, #2d3436); 
+            color: #fff; 
+        }
+        .emp-calendar-day.shift-vacation { 
+            background: linear-gradient(135deg, #00ff88, #00b894); 
+            color: #1a1a2e; 
+        }
+        .emp-calendar-day.shift-sick { 
+            background: linear-gradient(135deg, #ff4757, #c0392b); 
+            color: #fff; 
+        }
+
+        .emp-calendar-day.today {
+            box-shadow: inset 0 0 0 2px #fff;
+        }
+
+        .emp-calendar-day.weekend {
+            border: 1px solid rgba(255, 71, 87, 0.3);
+        }
+
+        .emp-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+            padding: 8px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .emp-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 0.55rem;
+            color: #aaa;
+        }
+
+        .emp-legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        .close-emp-modal {
+            width: 100%;
+            padding: 12px;
+            font-size: 0.9rem;
+        }
+
         /* Mobile tabs */
         .mobile-tabs {
             display: none;
@@ -857,6 +1044,10 @@
                 max-width: 450px;
             }
 
+            .employee-modal .modal-content {
+                max-width: 420px;
+            }
+
             .modal-content h3 {
                 font-size: 1.2rem;
             }
@@ -918,7 +1109,6 @@
                 padding: 10px 5px;
             }
 
-            /* ИЗМЕНЕНО: Для десктопа */
             .schedule-table td.employee-name {
                 font-size: 0.7rem;
                 width: 90px;
@@ -965,6 +1155,39 @@
 
             .stats-table th {
                 font-size: 0.85rem;
+            }
+
+            .emp-calendar-day {
+                font-size: 0.75rem;
+            }
+
+            .emp-calendar-day .day-num {
+                font-size: 0.8rem;
+            }
+
+            .emp-calendar-day .day-shift {
+                font-size: 0.6rem;
+            }
+
+            .emp-calendar-header {
+                font-size: 0.75rem;
+            }
+
+            .emp-stat-label {
+                font-size: 0.65rem;
+            }
+
+            .emp-stat-value {
+                font-size: 1.2rem;
+            }
+
+            .emp-legend-item {
+                font-size: 0.7rem;
+            }
+
+            .emp-legend-color {
+                width: 16px;
+                height: 16px;
             }
         }
 
@@ -1098,7 +1321,7 @@
         </div>
     </nav>
 
-    <!-- Modal -->
+    <!-- Shift Edit Modal -->
     <div class="modal" id="shiftModal">
         <div class="modal-content">
             <h3>Редактирование</h3>
@@ -1133,6 +1356,33 @@
         </div>
     </div>
 
+    <!-- Employee Calendar Modal -->
+    <div class="modal employee-modal" id="employeeModal">
+        <div class="modal-content">
+            <div class="employee-modal-header">
+                <div class="emp-color" id="empModalColor"></div>
+                <h3 id="empModalName"></h3>
+            </div>
+            
+            <div class="employee-month-title" id="empModalMonth"></div>
+            
+            <div class="employee-stats-row" id="empModalStats"></div>
+            
+            <div class="emp-calendar" id="empModalCalendar"></div>
+            
+            <div class="emp-legend">
+                <div class="emp-legend-item"><div class="emp-legend-color shift-work"></div>Работа</div>
+                <div class="emp-legend-item"><div class="emp-legend-color shift-work-cleaning"></div>Уборка</div>
+                <div class="emp-legend-item"><div class="emp-legend-color shift-work-fullCleaning"></div>Полная</div>
+                <div class="emp-legend-item"><div class="emp-legend-color shift-off"></div>Вых</div>
+                <div class="emp-legend-item"><div class="emp-legend-color shift-vacation"></div>Отп</div>
+                <div class="emp-legend-item"><div class="emp-legend-color shift-sick"></div>Бол</div>
+            </div>
+            
+            <button class="close-emp-modal btn-secondary" onclick="closeEmployeeModal()">Закрыть</button>
+        </div>
+    </div>
+
     <div class="toast" id="toast"></div>
 
     <script>
@@ -1146,11 +1396,13 @@
         let currentDate = new Date();
         let selectedCell = null;
         let selectedCleaning = 'none';
+        let selectedEmployee = null;
         let isMobile = window.innerWidth <= 768;
 
         const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
         const monthNamesShort = ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'];
         const dayNames = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+        const dayNamesShort = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
 
         document.addEventListener('DOMContentLoaded', () => {
             checkAuth();
@@ -1297,6 +1549,10 @@
                 if (data === null) delete shifts[key];
                 else shifts[key] = data;
                 render();
+                // Обновить модальное окно сотрудника если открыто
+                if (selectedEmployee) {
+                    renderEmployeeCalendar(selectedEmployee);
+                }
             } catch (e) {
                 showToast(e.message, true);
             }
@@ -1338,7 +1594,7 @@
             }
             list.innerHTML = employees.map(e => `
                 <div class="employee-item">
-                    <div class="employee-info">
+                    <div class="employee-info" onclick="openEmployeeModal('${e.id}')" style="cursor:pointer">
                         <div class="employee-color" style="background:${e.color}"></div>
                         <span>${e.name}</span>
                     </div>
@@ -1365,6 +1621,7 @@
 
         function getDaysInMonth(y, m) { return new Date(y, m + 1, 0).getDate(); }
         function getDayOfWeek(y, m, d) { return new Date(y, m, d).getDay(); }
+        function getFirstDayOfMonth(y, m) { return new Date(y, m, 1).getDay(); }
 
         function getShiftDisplay(data) {
             if (!data) return { label: '', class: '' };
@@ -1373,6 +1630,23 @@
                 let cls = 'shift-work';
                 if (data.cleaning === 'cleaning') { label += '/У'; cls = 'shift-work-cleaning'; }
                 else if (data.cleaning === 'fullCleaning') { label += '/У1'; cls = 'shift-work-fullCleaning'; }
+                return { label, class: cls };
+            }
+            const map = {
+                'off': { label: 'В', class: 'shift-off' },
+                'vacation': { label: 'О', class: 'shift-vacation' },
+                'sick': { label: 'Б', class: 'shift-sick' }
+            };
+            return map[data.type] || { label: '', class: '' };
+        }
+
+        function getShiftShortDisplay(data) {
+            if (!data) return { label: '', class: '' };
+            if (data.type === 'work') {
+                let label = data.hours.toString();
+                let cls = 'shift-work';
+                if (data.cleaning === 'cleaning') { cls = 'shift-work-cleaning'; }
+                else if (data.cleaning === 'fullCleaning') { cls = 'shift-work-fullCleaning'; }
                 return { label, class: cls };
             }
             const map = {
@@ -1408,7 +1682,7 @@
 
             let body = '';
             employees.forEach(emp => {
-                body += `<tr><td class="employee-name"><span style="color:${emp.color}">●</span> ${emp.name}</td>`;
+                body += `<tr><td class="employee-name" onclick="openEmployeeModal('${emp.id}')"><span style="color:${emp.color}">●</span> ${emp.name}</td>`;
                 let total = 0;
                 for (let d = 1; d <= days; d++) {
                     const dow = getDayOfWeek(year, month, d);
@@ -1506,8 +1780,121 @@
             selectedCell = null;
         }
 
+        // ==================== EMPLOYEE CALENDAR MODAL ====================
+        function openEmployeeModal(empId) {
+            const emp = employees.find(e => e.id === empId);
+            if (!emp) return;
+            
+            selectedEmployee = empId;
+            
+            document.getElementById('empModalColor').style.background = emp.color;
+            document.getElementById('empModalName').textContent = emp.name;
+            
+            renderEmployeeCalendar(empId);
+            
+            document.getElementById('employeeModal').classList.add('active');
+        }
+
+        function renderEmployeeCalendar(empId) {
+            const emp = employees.find(e => e.id === empId);
+            if (!emp) return;
+            
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const days = getDaysInMonth(year, month);
+            const firstDay = getFirstDayOfMonth(year, month);
+            const today = new Date();
+            
+            document.getElementById('empModalMonth').textContent = `${monthNames[month]} ${year}`;
+            
+            // Подсчёт статистики
+            let stats = { hours: 0, shifts: 0, cleaning: 0, fullCleaning: 0 };
+            for (let d = 1; d <= days; d++) {
+                const shift = shifts[`${empId}_${year}-${month}-${d}`];
+                if (shift?.type === 'work') {
+                    stats.hours += shift.hours;
+                    stats.shifts++;
+                    if (shift.cleaning === 'cleaning') stats.cleaning++;
+                    else if (shift.cleaning === 'fullCleaning') stats.fullCleaning++;
+                }
+            }
+            
+            document.getElementById('empModalStats').innerHTML = `
+                <div class="emp-stat">
+                    <div class="emp-stat-label">Смен</div>
+                    <div class="emp-stat-value">${stats.shifts}</div>
+                </div>
+                <div class="emp-stat">
+                    <div class="emp-stat-label">Часов</div>
+                    <div class="emp-stat-value">${stats.hours}</div>
+                </div>
+                <div class="emp-stat">
+                    <div class="emp-stat-label">Уборок</div>
+                    <div class="emp-stat-value">${stats.cleaning}</div>
+                </div>
+                <div class="emp-stat">
+                    <div class="emp-stat-label">Полных</div>
+                    <div class="emp-stat-value">${stats.fullCleaning}</div>
+                </div>
+            `;
+            
+            // Календарь
+            let calendarHtml = '';
+            
+            // Заголовки дней недели (начиная с понедельника)
+            const daysOrder = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+            daysOrder.forEach((day, i) => {
+                const isWeekend = i >= 5;
+                calendarHtml += `<div class="emp-calendar-header ${isWeekend ? 'weekend' : ''}">${day}</div>`;
+            });
+            
+            // Пустые ячейки до первого дня месяца
+            // Преобразуем: 0 (Вс) -> 6, 1 (Пн) -> 0, 2 (Вт) -> 1, ...
+            const adjustedFirstDay = firstDay === 0 ? 6 : firstDay - 1;
+            for (let i = 0; i < adjustedFirstDay; i++) {
+                calendarHtml += '<div class="emp-calendar-day empty"></div>';
+            }
+            
+            // Дни месяца
+            for (let d = 1; d <= days; d++) {
+                const dow = getDayOfWeek(year, month, d);
+                const isWeekend = dow === 0 || dow === 6;
+                const isToday = today.getDate() === d && today.getMonth() === month && today.getFullYear() === year;
+                
+                const key = `${empId}_${year}-${month}-${d}`;
+                const shift = shifts[key];
+                const disp = getShiftShortDisplay(shift);
+                
+                calendarHtml += `
+                    <div class="emp-calendar-day ${disp.class} ${isWeekend ? 'weekend' : ''} ${isToday ? 'today' : ''}"
+                         onclick="openShiftFromEmpModal('${empId}', ${year}, ${month}, ${d})">
+                        <span class="day-num">${d}</span>
+                        <span class="day-shift">${disp.label}</span>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('empModalCalendar').innerHTML = calendarHtml;
+        }
+
+        function openShiftFromEmpModal(empId, year, month, day) {
+            closeEmployeeModal();
+            setTimeout(() => {
+                openShiftModal(empId, year, month, day);
+            }, 150);
+        }
+
+        function closeEmployeeModal() {
+            document.getElementById('employeeModal').classList.remove('active');
+            selectedEmployee = null;
+        }
+
         document.getElementById('shiftModal').addEventListener('click', e => {
             if (e.target.id === 'shiftModal') closeModal();
+        });
+
+        document.getElementById('employeeModal').addEventListener('click', e => {
+            if (e.target.id === 'employeeModal') closeEmployeeModal();
         });
 
         document.getElementById('modalHours').addEventListener('keypress', e => {
@@ -1531,7 +1918,6 @@
             setTimeout(() => toast.classList.remove('show'), 2500);
         }
 
-        // ИЗМЕНЕНО: Экспорт в Excel с автоматическим скачиванием
         function exportToExcel() {
             try {
                 const year = currentDate.getFullYear();
@@ -1561,7 +1947,6 @@
                 ws['!cols'] = [{ wch: 20 }, ...Array(days).fill({ wch: 6 }), { wch: 8 }];
                 XLSX.utils.book_append_sheet(wb, ws, 'График');
                 
-                // Автоматическое скачивание
                 const fileName = `Смены_${monthNamesShort[month]}_${year}.xlsx`;
                 XLSX.writeFile(wb, fileName);
                 
@@ -1571,7 +1956,12 @@
             }
         }
 
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+        document.addEventListener('keydown', e => { 
+            if (e.key === 'Escape') {
+                closeModal();
+                closeEmployeeModal();
+            }
+        });
     </script>
 </body>
 </html>
