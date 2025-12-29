@@ -1176,12 +1176,17 @@
         }
 
         function showApp() {
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('appScreen').classList.add('active');
-            if (isMobile) document.getElementById('mobileTabs').style.display = 'block';
-            document.getElementById('userBadge').textContent = currentUser.name;
-            loadData();
-        }
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('appScreen').classList.add('active');
+
+    if (isMobile) {
+        document.getElementById('mobileTabs').style.display = 'block';
+        showSection('calendar'); // ← ВАЖНО
+    }
+
+    document.getElementById('userBadge').textContent = currentUser.name;
+    loadData();
+}
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
