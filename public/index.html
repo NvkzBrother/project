@@ -365,29 +365,50 @@
             padding: 0 10px;
         }
 
-        .schedule-table td.employee-name {
-    text-align: left;
+        /* ===== FIXED NAME COLUMN ===== */
+.schedule-table td.employee-name {
+    position: sticky;
+    left: 0;
+    z-index: 5;
 
-    font-size: 0.62rem;
-    font-weight: 500;
-    line-height: 1.15;
+    background: rgba(26, 26, 46, 0.98);
+    border-right: 1px solid rgba(255,255,255,0.12);
 
     min-width: 110px;
     max-width: 110px;
-    height: 32px;                 /* 🔑 фиксированная высота строки */
+    height: 32px;
 
-    padding: 4px 8px;
-    vertical-align: middle;       /* центр по вертикали */
-
-    white-space: normal;
-    word-break: break-word;
-
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;         /* максимум 2 строки */
-    overflow: hidden;
+    padding: 0 6px;
+    vertical-align: middle;
 }
 
+/* inner layout */
+.employee-name-inner {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 100%;
+}
+
+/* color dot */
+.employee-dot {
+    font-size: 0.6rem;
+    flex-shrink: 0;
+}
+
+/* text: 2 lines max */
+.employee-text {
+    font-size: 0.62rem;
+    line-height: 1.15;
+    font-weight: 500;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+    word-break: break-word;
+}
         .shift-cell {
             cursor: pointer;
             min-width: 32px;
@@ -873,7 +894,14 @@
                 height: 42px;
                 font-size: 0.75rem;
             }
+            .schedule-table tr {
+    height: 32px;
+}
 
+.shift-cell {
+    min-width: 32px;
+    height: 32px;
+}
             .schedule-table th {
                 font-size: 0.8rem;
                 padding: 10px 5px;
@@ -1362,7 +1390,13 @@
 
             let body = '';
             employees.forEach(emp => {
-                body += `<tr><td class="employee-name"><span style="color:${emp.color}">●</span> ${emp.name}</td>`;
+                body += `<tr>
+<td class="employee-name">
+    <div class="employee-name-inner">
+        <span class="employee-dot" style="color:${emp.color}">●</span>
+        <span class="employee-text">${emp.name}</span>
+    </div>
+</td>`;
                 let total = 0;
                 for (let d = 1; d <= days; d++) {
                     const dow = getDayOfWeek(year, month, d);
