@@ -35,18 +35,16 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
-            min-height: -webkit-fill-available;
             color: #fff;
-            overflow-x: hidden;
+            font-size: 16px;
         }
 
-        /* ==================== LOGIN SCREEN ==================== */
+        /* ==================== LOGIN ==================== */
         .login-screen {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            min-height: -webkit-fill-available;
             padding: 20px;
         }
 
@@ -55,20 +53,21 @@
             padding: 40px 25px;
             border-radius: 20px;
             width: 100%;
-            max-width: 380px;
+            max-width: 400px;
             backdrop-filter: blur(10px);
         }
 
         .login-box h1 {
             text-align: center;
             margin-bottom: 10px;
-            font-size: 1.8rem;
+            font-size: 2rem;
         }
 
         .login-box p {
             text-align: center;
             color: #888;
             margin-bottom: 30px;
+            font-size: 1rem;
         }
 
         .form-group {
@@ -79,17 +78,17 @@
             display: block;
             margin-bottom: 8px;
             color: #aaa;
-            font-size: 0.9rem;
+            font-size: 1rem;
         }
 
         .form-group input {
             width: 100%;
-            padding: 14px;
+            padding: 16px;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             background: rgba(255,255,255,0.1);
             color: #fff;
-            font-size: 16px;
+            font-size: 18px;
         }
 
         .form-group input:focus {
@@ -98,12 +97,12 @@
 
         .login-btn {
             width: 100%;
-            padding: 14px;
+            padding: 16px;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             background: linear-gradient(135deg, #00d9ff, #00ff88);
             color: #1a1a2e;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
         }
@@ -111,18 +110,19 @@
         .login-error {
             background: rgba(255, 71, 87, 0.2);
             color: #ff6b6b;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 14px;
+            border-radius: 10px;
             margin-bottom: 20px;
             text-align: center;
             display: none;
+            font-size: 1rem;
         }
 
         /* ==================== MAIN APP ==================== */
         .app-screen {
             display: none;
-            padding: 10px;
-            padding-bottom: 70px;
+            padding: 15px;
+            padding-bottom: 90px;
         }
 
         .app-screen.active {
@@ -138,12 +138,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            padding: 5px 0;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .app-header h1 {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             background: linear-gradient(90deg, #00d9ff, #00ff88);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -152,55 +153,57 @@
         .user-info {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .user-badge {
             background: rgba(0, 217, 255, 0.2);
             color: #00d9ff;
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-size: 0.75rem;
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
         }
 
         .logout-btn {
             background: rgba(255, 71, 87, 0.2);
             color: #ff6b6b;
             border: none;
-            padding: 6px 12px;
-            border-radius: 8px;
+            padding: 10px 16px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 0.75rem;
+            font-size: 0.9rem;
+            font-weight: 500;
         }
 
         /* Controls */
         .controls {
             display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 12px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
             align-items: center;
         }
 
         .control-group {
             background: rgba(255,255,255,0.1);
-            padding: 8px 12px;
-            border-radius: 10px;
+            padding: 12px 16px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .control-group label {
-            font-size: 0.75rem;
+            font-size: 0.9rem;
             color: #aaa;
             white-space: nowrap;
         }
 
         input, select, button {
-            padding: 8px 12px;
+            padding: 12px 16px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 16px;
         }
 
@@ -214,12 +217,13 @@
             color: #1a1a2e;
             font-weight: bold;
             cursor: pointer;
+            min-height: 48px;
         }
 
         .btn-excel {
             background: linear-gradient(135deg, #2ed573, #1e90ff);
-            font-size: 0.8rem;
-            padding: 8px 15px;
+            font-size: 1rem;
+            padding: 12px 20px;
         }
 
         .btn-secondary {
@@ -230,48 +234,44 @@
             background: linear-gradient(135deg, #ff4757, #ff6b81);
         }
 
-        /* Main content */
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        /* Sidebar */
-        .sidebar {
+        /* Sections */
+        .section {
             background: rgba(255,255,255,0.05);
-            border-radius: 12px;
-            padding: 12px;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
         }
 
-        .sidebar h2 {
-            font-size: 0.95rem;
-            margin-bottom: 10px;
+        .section h2 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
             color: #00d9ff;
         }
 
+        /* Employees */
         .add-employee {
             display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
+            gap: 10px;
+            margin-bottom: 15px;
         }
 
         .add-employee input {
             flex: 1;
             min-width: 0;
-            padding: 10px 12px;
+            padding: 14px 16px;
+            font-size: 16px;
         }
 
         .add-employee button {
-            padding: 10px 15px;
-            font-size: 1.1rem;
+            padding: 14px 20px;
+            font-size: 1.3rem;
         }
 
         .employee-list {
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            max-height: 200px;
+            gap: 10px;
+            max-height: 250px;
             overflow-y: auto;
         }
 
@@ -280,167 +280,89 @@
             align-items: center;
             justify-content: space-between;
             background: rgba(255,255,255,0.1);
-            padding: 10px 12px;
-            border-radius: 8px;
+            padding: 14px 16px;
+            border-radius: 12px;
         }
 
         .employee-info {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
+            gap: 12px;
+            font-size: 1rem;
         }
 
         .employee-color {
-            width: 10px;
-            height: 10px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
             flex-shrink: 0;
         }
 
         .delete-btn {
-            background: transparent;
-            color: #ff4757;
-            padding: 5px 10px;
-            font-size: 1.1rem;
+            background: rgba(255, 71, 87, 0.3);
+            color: #ff6b6b;
+            padding: 10px 16px;
+            font-size: 1.2rem;
+            border-radius: 8px;
         }
 
         /* ==================== CALENDAR ==================== */
-        .calendar-section {
-            background: rgba(255,255,255,0.05);
-            border-radius: 12px;
-            padding: 12px;
-            overflow: hidden;
-        }
-
         .calendar-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
+            gap: 10px;
         }
 
         .calendar-header h2 {
-            font-size: 1.1rem;
+            font-size: 1.3rem;
             font-weight: 600;
+            margin: 0;
+            color: #fff;
         }
 
         .calendar-header button {
-            padding: 8px 15px;
-            font-size: 1rem;
+            padding: 12px 20px;
+            font-size: 1.2rem;
+            min-width: 50px;
         }
 
+        /* Legend */
         .legend {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 12px;
-            padding: 8px;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 12px;
             background: rgba(255,255,255,0.05);
-            border-radius: 8px;
+            border-radius: 10px;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 4px;
-            font-size: 0.65rem;
+            gap: 6px;
+            font-size: 0.85rem;
         }
 
         .legend-color {
-            width: 16px;
-            height: 14px;
-            border-radius: 3px;
+            width: 24px;
+            height: 20px;
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.5rem;
+            font-size: 0.6rem;
             font-weight: bold;
         }
 
-        /* Мобильный календарь */
-        .mobile-calendar {
-            display: none;
-        }
-
-        .day-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-            margin-bottom: 10px;
-            overflow: hidden;
-        }
-
-        .day-card-header {
-            background: rgba(0, 217, 255, 0.15);
-            padding: 10px 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 600;
-        }
-
-        .day-card-header.weekend {
-            background: rgba(255, 71, 87, 0.15);
-        }
-
-        .day-card-header.today {
-            background: rgba(0, 255, 136, 0.2);
-            border-left: 3px solid #00ff88;
-        }
-
-        .day-card-header .date {
-            font-size: 1rem;
-        }
-
-        .day-card-header .weekday {
-            font-size: 0.8rem;
-            color: #aaa;
-        }
-
-        .day-card-body {
-            padding: 8px;
-        }
-
-        .day-employee-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 10px;
-            margin: 4px 0;
-            border-radius: 8px;
-            background: rgba(255,255,255,0.05);
-            cursor: pointer;
-        }
-
-        .day-employee-row:active {
-            opacity: 0.7;
-        }
-
-        .day-employee-name {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-        }
-
-        .day-shift-value {
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            min-width: 45px;
-            text-align: center;
-        }
-
-        .day-shift-value.empty {
-            background: rgba(255,255,255,0.1);
-            color: #666;
-        }
-
-        /* Десктопная таблица */
+        /* Table */
         .table-wrapper {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
+            margin: 0 -16px;
+            padding: 0 16px;
         }
 
         .schedule-table {
@@ -451,47 +373,49 @@
 
         .schedule-table th,
         .schedule-table td {
-            padding: 5px 3px;
+            padding: 10px 6px;
             text-align: center;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
         }
 
         .schedule-table th {
             background: rgba(0, 217, 255, 0.2);
-            font-size: 0.7rem;
+            font-size: 0.85rem;
             font-weight: 600;
             position: sticky;
             top: 0;
             z-index: 10;
         }
 
-        .schedule-table th:first-child,
+        .schedule-table th:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 20;
+            background: rgba(0, 150, 200, 0.95);
+        }
+
         .schedule-table td:first-child {
             position: sticky;
             left: 0;
-            z-index: 15;
+            z-index: 5;
             background: rgba(26, 26, 46, 0.98);
         }
 
-        .schedule-table th:first-child {
-            z-index: 20;
-            background: rgba(0, 100, 150, 0.9);
-        }
-
         .schedule-table th.weekend {
-            background: rgba(255, 71, 87, 0.2);
+            background: rgba(255, 71, 87, 0.25);
         }
 
         .schedule-table td.weekend {
-            background: rgba(255, 71, 87, 0.05);
+            background: rgba(255, 71, 87, 0.08);
         }
 
         .schedule-table td.employee-name {
             text-align: left;
-            font-size: 0.75rem;
-            min-width: 80px;
-            max-width: 100px;
-            padding: 5px 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            min-width: 100px;
+            max-width: 130px;
+            padding: 10px 12px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -499,56 +423,75 @@
 
         .shift-cell {
             cursor: pointer;
-            min-width: 32px;
-            height: 30px;
-            font-size: 0.6rem;
+            min-width: 44px;
+            height: 44px;
+            font-size: 0.75rem;
             font-weight: 600;
+            transition: opacity 0.2s;
         }
 
-        .shift-work { background: linear-gradient(135deg, #00d9ff, #00a8cc) !important; color: #1a1a2e; }
-        .shift-work-cleaning { background: linear-gradient(135deg, #a29bfe, #6c5ce7) !important; color: #fff; }
-        .shift-work-fullCleaning { background: linear-gradient(135deg, #fd79a8, #e84393) !important; color: #fff; }
-        .shift-off { background: linear-gradient(135deg, #576574, #222f3e) !important; color: #fff; }
-        .shift-vacation { background: linear-gradient(135deg, #00ff88, #00b894) !important; color: #1a1a2e; }
-        .shift-sick { background: linear-gradient(135deg, #ff4757, #c0392b) !important; color: #fff; }
+        .shift-cell:active {
+            opacity: 0.7;
+        }
 
-        .today { box-shadow: inset 0 0 0 2px #00ff88; }
+        .shift-work { 
+            background: linear-gradient(135deg, #00d9ff, #00a8cc) !important; 
+            color: #1a1a2e; 
+        }
+        .shift-work-cleaning { 
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7) !important; 
+            color: #fff; 
+        }
+        .shift-work-fullCleaning { 
+            background: linear-gradient(135deg, #fd79a8, #e84393) !important; 
+            color: #fff; 
+        }
+        .shift-off { 
+            background: linear-gradient(135deg, #636e72, #2d3436) !important; 
+            color: #fff; 
+        }
+        .shift-vacation { 
+            background: linear-gradient(135deg, #00ff88, #00b894) !important; 
+            color: #1a1a2e; 
+        }
+        .shift-sick { 
+            background: linear-gradient(135deg, #ff4757, #c0392b) !important; 
+            color: #fff; 
+        }
+
+        .today { 
+            box-shadow: inset 0 0 0 3px #00ff88; 
+        }
+
+        .total-cell {
+            font-size: 1rem;
+            font-weight: bold;
+            background: rgba(0, 217, 255, 0.1);
+        }
 
         /* Stats */
-        .stats-section {
-            background: rgba(255,255,255,0.05);
-            border-radius: 12px;
-            padding: 12px;
-        }
-
-        .stats-section h2 {
-            margin-bottom: 12px;
-            color: #00d9ff;
-            font-size: 0.95rem;
-        }
-
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-bottom: 15px;
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
         .stat-card {
             background: rgba(255,255,255,0.1);
-            padding: 12px 8px;
-            border-radius: 10px;
+            padding: 16px 12px;
+            border-radius: 12px;
             text-align: center;
         }
 
         .stat-card h3 {
-            font-size: 0.65rem;
+            font-size: 0.8rem;
             color: #aaa;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
 
         .stat-card .value {
-            font-size: 1.3rem;
+            font-size: 1.6rem;
             font-weight: bold;
             background: linear-gradient(90deg, #00d9ff, #00ff88);
             -webkit-background-clip: text;
@@ -558,19 +501,20 @@
         .stats-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.75rem;
+            font-size: 0.9rem;
         }
 
         .stats-table th,
         .stats-table td {
-            padding: 8px 5px;
+            padding: 12px 8px;
             text-align: left;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         .stats-table th {
             background: rgba(0, 217, 255, 0.1);
-            font-size: 0.7rem;
+            font-size: 0.85rem;
+            font-weight: 600;
         }
 
         /* Modal */
@@ -587,16 +531,18 @@
             z-index: 1000;
         }
 
-        .modal.active { display: flex; }
+        .modal.active { 
+            display: flex; 
+        }
 
         .modal-content {
             background: #1a1a2e;
-            padding: 20px 15px;
-            padding-bottom: calc(20px + env(safe-area-inset-bottom));
-            border-radius: 20px 20px 0 0;
+            padding: 25px 20px;
+            padding-bottom: calc(25px + env(safe-area-inset-bottom));
+            border-radius: 24px 24px 0 0;
             width: 100%;
             max-width: 500px;
-            max-height: 85vh;
+            max-height: 90vh;
             overflow-y: auto;
             animation: slideUp 0.3s ease;
         }
@@ -609,67 +555,72 @@
         .modal-content h3 {
             text-align: center;
             margin-bottom: 8px;
-            font-size: 1.1rem;
+            font-size: 1.3rem;
         }
 
         .modal-info {
             text-align: center;
             color: #00d9ff;
-            margin-bottom: 15px;
-            font-size: 0.95rem;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
             font-weight: 500;
         }
 
         .work-shift-form {
             background: rgba(255,255,255,0.05);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 15px;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
         }
 
         .modal-section-title {
             text-align: center;
             color: #aaa;
-            margin-bottom: 12px;
-            font-size: 0.85rem;
+            margin-bottom: 15px;
+            font-size: 1rem;
         }
 
         .hours-row {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
         .hours-row input {
-            width: 90px;
+            width: 100px;
             text-align: center;
-            font-size: 1.5rem;
-            padding: 12px;
+            font-size: 1.8rem;
+            padding: 14px;
             font-weight: bold;
         }
 
         .hours-row span {
             color: #aaa;
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
 
         .cleaning-options {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-bottom: 15px;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
         .cleaning-option {
-            padding: 12px 8px;
-            border-radius: 10px;
+            padding: 16px 12px;
+            border-radius: 12px;
             cursor: pointer;
             background: rgba(255,255,255,0.1);
-            border: 2px solid transparent;
-            font-size: 0.85rem;
+            border: 3px solid transparent;
+            font-size: 1rem;
             text-align: center;
+            transition: all 0.2s;
+        }
+
+        .cleaning-option:active {
+            transform: scale(0.95);
         }
 
         .cleaning-option.active {
@@ -689,40 +640,46 @@
 
         .save-work-btn {
             width: 100%;
-            padding: 14px;
-            font-size: 1rem;
+            padding: 18px;
+            font-size: 1.1rem;
         }
 
         .divider {
             text-align: center;
-            color: #444;
-            margin: 15px 0;
-            font-size: 0.8rem;
+            color: #555;
+            margin: 20px 0;
+            font-size: 0.95rem;
         }
 
         .other-options {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
+            gap: 10px;
         }
 
         .other-option {
-            padding: 14px 8px;
-            border-radius: 10px;
+            padding: 18px 12px;
+            border-radius: 12px;
             cursor: pointer;
             text-align: center;
-            font-size: 0.8rem;
+            font-size: 0.95rem;
+            transition: transform 0.2s;
+        }
+
+        .other-option:active {
+            transform: scale(0.95);
         }
 
         .modal-buttons {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 15px;
+            gap: 12px;
+            margin-top: 20px;
         }
 
         .modal-buttons button {
-            padding: 14px;
+            padding: 16px;
+            font-size: 1rem;
         }
 
         /* Mobile tabs */
@@ -733,8 +690,8 @@
             left: 0;
             right: 0;
             background: rgba(26, 26, 46, 0.98);
-            padding: 8px 0;
-            padding-bottom: calc(8px + env(safe-area-inset-bottom));
+            padding: 10px 0;
+            padding-bottom: calc(10px + env(safe-area-inset-bottom));
             z-index: 100;
             border-top: 1px solid rgba(255,255,255,0.1);
         }
@@ -748,50 +705,60 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 6px 15px;
+            padding: 8px 20px;
             color: #666;
-            font-size: 0.65rem;
+            font-size: 0.8rem;
             cursor: pointer;
             border: none;
             background: none;
             transition: color 0.2s;
         }
 
-        .mobile-tab.active { color: #00d9ff; }
-        .mobile-tab-icon { font-size: 1.4rem; margin-bottom: 2px; }
+        .mobile-tab.active { 
+            color: #00d9ff; 
+        }
+        
+        .mobile-tab-icon { 
+            font-size: 1.6rem; 
+            margin-bottom: 4px; 
+        }
 
         /* Toast */
         .toast {
             position: fixed;
-            bottom: 80px;
+            bottom: 100px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
             background: linear-gradient(135deg, #2ed573, #1e90ff);
             color: #fff;
-            padding: 12px 20px;
-            border-radius: 10px;
+            padding: 16px 24px;
+            border-radius: 12px;
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 1rem;
             transition: transform 0.3s;
             z-index: 2000;
             white-space: nowrap;
         }
 
-        .toast.show { transform: translateX(-50%) translateY(0); }
-        .toast.error { background: linear-gradient(135deg, #ff4757, #c0392b); }
+        .toast.show { 
+            transform: translateX(-50%) translateY(0); 
+        }
+        .toast.error { 
+            background: linear-gradient(135deg, #ff4757, #c0392b); 
+        }
 
         /* Loading */
         .loading {
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 30px;
+            padding: 40px;
         }
 
         .spinner {
-            width: 35px;
-            height: 35px;
-            border: 3px solid rgba(255,255,255,0.1);
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.1);
             border-top-color: #00d9ff;
             border-radius: 50%;
             animation: spin 1s linear infinite;
@@ -801,49 +768,69 @@
             to { transform: rotate(360deg); }
         }
 
-        /* View toggle */
-        .view-toggle {
-            display: none;
-            gap: 5px;
-            margin-bottom: 12px;
-        }
-
-        .view-toggle button {
-            flex: 1;
-            padding: 10px;
-            font-size: 0.8rem;
-            background: rgba(255,255,255,0.1);
-            color: #aaa;
-        }
-
-        .view-toggle button.active {
-            background: linear-gradient(135deg, #00d9ff, #00ff88);
-            color: #1a1a2e;
-        }
-
         /* ==================== RESPONSIVE ==================== */
         @media (max-width: 768px) {
-            .mobile-tabs { display: block; }
-            .section.hidden-mobile { display: none; }
-            .view-toggle { display: flex; }
-            .mobile-calendar.active { display: block; }
-            .table-wrapper.hidden { display: none; }
-            .main-content { gap: 10px; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .other-options { grid-template-columns: 1fr; }
+            .mobile-tabs { 
+                display: block; 
+            }
+            
+            .section.hidden-mobile { 
+                display: none; 
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .other-options {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .cleaning-options {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
         }
 
         @media (min-width: 769px) {
-            .app-screen { padding: 20px; padding-bottom: 30px; }
-            .main-content { display: grid; grid-template-columns: 260px 1fr; }
-            .modal { align-items: center; }
-            .modal-content { border-radius: 20px; max-height: 90vh; }
-            .calendar-header h2 { font-size: 1.3rem; }
-            .stats-grid { grid-template-columns: repeat(6, 1fr); }
+            .app-screen { 
+                padding: 25px; 
+                padding-bottom: 30px;
+                max-width: 1400px;
+                margin: 0 auto;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .modal { 
+                align-items: center; 
+            }
+            
+            .modal-content { 
+                border-radius: 24px; 
+                max-height: 90vh;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+
+            .shift-cell {
+                min-width: 48px;
+                height: 48px;
+                font-size: 0.85rem;
+            }
         }
 
-        @media (min-width: 1200px) {
-            .shift-cell { min-width: 38px; height: 34px; font-size: 0.7rem; }
+        @media (min-width: 1024px) {
+            .main-grid {
+                display: grid;
+                grid-template-columns: 300px 1fr;
+                gap: 20px;
+            }
         }
     </style>
 </head>
@@ -887,19 +874,21 @@
             <button onclick="exportToExcel()" class="btn-excel">📊 Excel</button>
         </div>
 
-        <div class="main-content">
-            <aside class="sidebar section" id="sectionEmployees">
+        <div class="main-grid">
+            <!-- Сотрудники -->
+            <section class="section" id="sectionEmployees">
                 <h2>👥 Сотрудники</h2>
-                <div class="add-employee" id="addEmployeeForm">
+                <div class="add-employee">
                     <input type="text" id="newEmployeeName" placeholder="Имя сотрудника">
                     <button onclick="addEmployee()">+</button>
                 </div>
                 <div class="employee-list" id="employeeList">
                     <div class="loading"><div class="spinner"></div></div>
                 </div>
-            </aside>
+            </section>
 
-            <main class="calendar-section section" id="sectionCalendar">
+            <!-- Календарь -->
+            <section class="section" id="sectionCalendar">
                 <div class="calendar-header">
                     <button onclick="changeMonth(-1)">◀</button>
                     <h2 id="currentMonthDisplay"></h2>
@@ -909,35 +898,38 @@
                 <div class="legend">
                     <div class="legend-item"><div class="legend-color shift-work">10</div><span>Часы</span></div>
                     <div class="legend-item"><div class="legend-color shift-work-cleaning">У</div><span>Уборка</span></div>
-                    <div class="legend-item"><div class="legend-color shift-work-fullCleaning">У1</div><span>Полн.</span></div>
-                    <div class="legend-item"><div class="legend-color shift-off">В</div><span>Вых</span></div>
-                    <div class="legend-item"><div class="legend-color shift-vacation">О</div><span>Отп</span></div>
-                    <div class="legend-item"><div class="legend-color shift-sick">Б</div><span>Бол</span></div>
+                    <div class="legend-item"><div class="legend-color shift-work-fullCleaning">У1</div><span>Полная</span></div>
+                    <div class="legend-item"><div class="legend-color shift-off">В</div><span>Выходной</span></div>
+                    <div class="legend-item"><div class="legend-color shift-vacation">О</div><span>Отпуск</span></div>
+                    <div class="legend-item"><div class="legend-color shift-sick">Б</div><span>Больничный</span></div>
                 </div>
 
-                <div class="view-toggle">
-                    <button class="active" onclick="setView('cards')">📋 Карточки</button>
-                    <button onclick="setView('table')">📊 Таблица</button>
-                </div>
-
-                <div class="mobile-calendar active" id="mobileCalendar"></div>
-
-                <div class="table-wrapper hidden" id="tableWrapper">
+                <div class="table-wrapper">
                     <table class="schedule-table">
                         <thead id="tableHead"></thead>
                         <tbody id="tableBody"></tbody>
                     </table>
                 </div>
-            </main>
+            </section>
         </div>
 
-        <section class="stats-section section" id="sectionStats">
+        <!-- Статистика -->
+        <section class="section" id="sectionStats">
             <h2>📊 Статистика</h2>
             <div class="stats-grid" id="statsGrid"></div>
             <div class="table-wrapper">
                 <table class="stats-table">
                     <thead>
-                        <tr><th>Сотрудник</th><th>Смен</th><th>Часов</th><th>У</th><th>У1</th><th>В</th><th>О</th><th>Б</th></tr>
+                        <tr>
+                            <th>Сотрудник</th>
+                            <th>Смен</th>
+                            <th>Часов</th>
+                            <th>У</th>
+                            <th>У1</th>
+                            <th>В</th>
+                            <th>О</th>
+                            <th>Б</th>
+                        </tr>
                     </thead>
                     <tbody id="statsTableBody"></tbody>
                 </table>
@@ -949,18 +941,21 @@
     <nav class="mobile-tabs" id="mobileTabs">
         <div class="mobile-tabs-inner">
             <button class="mobile-tab active" onclick="showSection('calendar')">
-                <span class="mobile-tab-icon">📅</span><span>График</span>
+                <span class="mobile-tab-icon">📅</span>
+                <span>График</span>
             </button>
             <button class="mobile-tab" onclick="showSection('employees')">
-                <span class="mobile-tab-icon">👥</span><span>Сотрудники</span>
+                <span class="mobile-tab-icon">👥</span>
+                <span>Сотрудники</span>
             </button>
             <button class="mobile-tab" onclick="showSection('stats')">
-                <span class="mobile-tab-icon">📊</span><span>Статистика</span>
+                <span class="mobile-tab-icon">📊</span>
+                <span>Статистика</span>
             </button>
         </div>
     </nav>
 
-    <!-- Shift Modal -->
+    <!-- Modal -->
     <div class="modal" id="shiftModal">
         <div class="modal-content">
             <h3>Редактирование</h3>
@@ -974,8 +969,8 @@
                 </div>
                 <div class="cleaning-options">
                     <div class="cleaning-option none active" onclick="selectCleaning('none')">Без уборки</div>
-                    <div class="cleaning-option cleaning" onclick="selectCleaning('cleaning')">🧹 У</div>
-                    <div class="cleaning-option fullCleaning" onclick="selectCleaning('fullCleaning')">🧽 У1</div>
+                    <div class="cleaning-option cleaning" onclick="selectCleaning('cleaning')">🧹 Уборка</div>
+                    <div class="cleaning-option fullCleaning" onclick="selectCleaning('fullCleaning')">🧽 Полная</div>
                 </div>
                 <button class="save-work-btn" onclick="saveWorkShift()">✓ Сохранить</button>
             </div>
@@ -1009,12 +1004,10 @@
         let selectedCell = null;
         let selectedCleaning = 'none';
         let isMobile = window.innerWidth <= 768;
-        let currentView = 'cards';
 
         const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
         const monthNamesShort = ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'];
         const dayNames = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
-        const dayNamesFull = ['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'];
 
         document.addEventListener('DOMContentLoaded', () => {
             checkAuth();
@@ -1024,30 +1017,9 @@
         });
 
         function handleResize() {
-            const wasMobile = isMobile;
             isMobile = window.innerWidth <= 768;
             if (!isMobile) {
                 document.querySelectorAll('.section').forEach(s => s.classList.remove('hidden-mobile'));
-                setView('table');
-            } else if (!wasMobile && isMobile) {
-                setView('cards');
-            }
-        }
-
-        function setView(view) {
-            currentView = view;
-            const cards = document.getElementById('mobileCalendar');
-            const table = document.getElementById('tableWrapper');
-            const buttons = document.querySelectorAll('.view-toggle button');
-            buttons.forEach(b => b.classList.remove('active'));
-            if (view === 'cards') {
-                cards.classList.add('active');
-                table.classList.add('hidden');
-                buttons[0].classList.add('active');
-            } else {
-                cards.classList.remove('active');
-                table.classList.remove('hidden');
-                buttons[1].classList.add('active');
             }
         }
 
@@ -1207,14 +1179,13 @@
         function render() {
             renderEmployeeList();
             renderCalendar();
-            renderMobileCalendar();
             renderStats();
         }
 
         function renderEmployeeList() {
             const list = document.getElementById('employeeList');
             if (!employees.length) {
-                list.innerHTML = '<p style="color:#666;text-align:center;padding:15px;font-size:0.85rem">Нет сотрудников</p>';
+                list.innerHTML = '<p style="color:#888;text-align:center;padding:20px;font-size:1rem">Нет сотрудников</p>';
                 return;
             }
             list.innerHTML = employees.map(e => `
@@ -1248,21 +1219,20 @@
         function getDayOfWeek(y, m, d) { return new Date(y, m, d).getDay(); }
 
         function getShiftDisplay(data) {
-            if (!data) return { label: '', class: '', full: '—' };
+            if (!data) return { label: '', class: '' };
             if (data.type === 'work') {
                 let label = data.hours.toString();
                 let cls = 'shift-work';
-                let full = data.hours + 'ч';
-                if (data.cleaning === 'cleaning') { label += '/У'; cls = 'shift-work-cleaning'; full += ' +У'; }
-                else if (data.cleaning === 'fullCleaning') { label += '/У1'; cls = 'shift-work-fullCleaning'; full += ' +У1'; }
-                return { label, class: cls, full };
+                if (data.cleaning === 'cleaning') { label += '/У'; cls = 'shift-work-cleaning'; }
+                else if (data.cleaning === 'fullCleaning') { label += '/У1'; cls = 'shift-work-fullCleaning'; }
+                return { label, class: cls };
             }
             const map = {
-                'off': { label: 'В', class: 'shift-off', full: 'Выходной' },
-                'vacation': { label: 'О', class: 'shift-vacation', full: 'Отпуск' },
-                'sick': { label: 'Б', class: 'shift-sick', full: 'Больничный' }
+                'off': { label: 'В', class: 'shift-off' },
+                'vacation': { label: 'О', class: 'shift-vacation' },
+                'sick': { label: 'Б', class: 'shift-sick' }
             };
-            return map[data.type] || { label: '', class: '', full: '—' };
+            return map[data.type] || { label: '', class: '' };
         }
 
         function renderCalendar() {
@@ -1271,8 +1241,7 @@
             const days = getDaysInMonth(year, month);
             const today = new Date();
 
-            document.getElementById('currentMonthDisplay').textContent = 
-                isMobile ? `${monthNamesShort[month]} ${year}` : `${monthNames[month]} ${year}`;
+            document.getElementById('currentMonthDisplay').textContent = `${monthNames[month]} ${year}`;
 
             let head = '<tr><th>Имя</th>';
             for (let d = 1; d <= days; d++) {
@@ -1285,7 +1254,7 @@
             document.getElementById('tableHead').innerHTML = head;
 
             if (!employees.length) {
-                document.getElementById('tableBody').innerHTML = `<tr><td colspan="${days + 2}" style="text-align:center;padding:25px;color:#666">Добавьте сотрудников</td></tr>`;
+                document.getElementById('tableBody').innerHTML = `<tr><td colspan="${days + 2}" style="text-align:center;padding:30px;color:#888;font-size:1rem">Добавьте сотрудников</td></tr>`;
                 return;
             }
 
@@ -1304,51 +1273,9 @@
                     body += `<td class="shift-cell ${disp.class} ${isWeekend ? 'weekend' : ''} ${isToday ? 'today' : ''}" 
                         onclick="openShiftModal('${emp.id}',${year},${month},${d})">${disp.label}</td>`;
                 }
-                body += `<td><strong>${total}</strong></td></tr>`;
+                body += `<td class="total-cell">${total}</td></tr>`;
             });
             document.getElementById('tableBody').innerHTML = body;
-        }
-
-        function renderMobileCalendar() {
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-            const days = getDaysInMonth(year, month);
-            const today = new Date();
-
-            if (!employees.length) {
-                document.getElementById('mobileCalendar').innerHTML = '<p style="text-align:center;padding:30px;color:#666">Добавьте сотрудников</p>';
-                return;
-            }
-
-            let html = '';
-            for (let d = 1; d <= days; d++) {
-                const dow = getDayOfWeek(year, month, d);
-                const isWeekend = dow === 0 || dow === 6;
-                const isToday = today.getDate() === d && today.getMonth() === month && today.getFullYear() === year;
-                let headerClass = isToday ? 'today' : (isWeekend ? 'weekend' : '');
-                
-                html += `<div class="day-card">
-                    <div class="day-card-header ${headerClass}">
-                        <span class="date">${d} ${monthNamesShort[month]}</span>
-                        <span class="weekday">${dayNamesFull[dow]}</span>
-                    </div>
-                    <div class="day-card-body">`;
-
-                employees.forEach(emp => {
-                    const key = `${emp.id}_${year}-${month}-${d}`;
-                    const shift = shifts[key];
-                    const disp = getShiftDisplay(shift);
-                    html += `<div class="day-employee-row" onclick="openShiftModal('${emp.id}',${year},${month},${d})">
-                        <div class="day-employee-name">
-                            <div class="employee-color" style="background:${emp.color}"></div>
-                            <span>${emp.name}</span>
-                        </div>
-                        <div class="day-shift-value ${disp.class || 'empty'}">${disp.full}</div>
-                    </div>`;
-                });
-                html += '</div></div>';
-            }
-            document.getElementById('mobileCalendar').innerHTML = html;
         }
 
         function renderStats() {
@@ -1379,9 +1306,13 @@
                 
                 rows += `<tr>
                     <td><span style="color:${emp.color}">●</span> ${emp.name}</td>
-                    <td><strong>${s.shifts}</strong></td><td><strong>${s.hours}</strong></td>
-                    <td>${s.cleaning || '-'}</td><td>${s.fullCleaning || '-'}</td>
-                    <td>${s.off || '-'}</td><td>${s.vacation || '-'}</td><td>${s.sick || '-'}</td>
+                    <td><strong>${s.shifts}</strong></td>
+                    <td><strong>${s.hours}</strong></td>
+                    <td>${s.cleaning || '-'}</td>
+                    <td>${s.fullCleaning || '-'}</td>
+                    <td>${s.off || '-'}</td>
+                    <td>${s.vacation || '-'}</td>
+                    <td>${s.sick || '-'}</td>
                 </tr>`;
             });
             
@@ -1391,8 +1322,8 @@
                 <div class="stat-card"><h3>Смен</h3><div class="value">${totals.shifts}</div></div>
                 <div class="stat-card"><h3>Часов</h3><div class="value">${totals.hours}</div></div>
                 <div class="stat-card"><h3>Уборок</h3><div class="value">${totals.cleaning}</div></div>
-                <div class="stat-card"><h3>Полн.уб.</h3><div class="value">${totals.fullCleaning}</div></div>
-                <div class="stat-card"><h3>Ср.часов</h3><div class="value">${employees.length ? Math.round(totals.hours / employees.length) : 0}</div></div>
+                <div class="stat-card"><h3>Полных</h3><div class="value">${totals.fullCleaning}</div></div>
+                <div class="stat-card"><h3>Ср. часов</h3><div class="value">${employees.length ? Math.round(totals.hours / employees.length) : 0}</div></div>
             `;
         }
 
@@ -1405,7 +1336,7 @@
         function openShiftModal(empId, year, month, day) {
             selectedCell = { empId, year, month, day };
             const emp = employees.find(e => e.id === empId);
-            document.getElementById('modalInfo').textContent = `${emp.name} — ${day} ${monthNamesShort[month]}`;
+            document.getElementById('modalInfo').textContent = `${emp.name} — ${day} ${monthNamesShort[month]} ${year}`;
             
             const key = `${empId}_${year}-${month}-${day}`;
             const shift = shifts[key];
@@ -1477,7 +1408,7 @@
             });
 
             const ws = XLSX.utils.aoa_to_sheet(data);
-            ws['!cols'] = [{ wch: 18 }, ...Array(days).fill({ wch: 5 }), { wch: 7 }];
+            ws['!cols'] = [{ wch: 20 }, ...Array(days).fill({ wch: 6 }), { wch: 8 }];
             XLSX.utils.book_append_sheet(wb, ws, 'График');
             XLSX.writeFile(wb, `Смены_${monthNamesShort[month]}_${year}.xlsx`);
             showToast('📊 Сохранено');
