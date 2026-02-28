@@ -8,7 +8,58 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'shift-scheduler-secret-2024';
 
-// MongoDB подключение
+// ==================== TELEGRAM CONFIG ====================
+const TELEGRAM_BOT_TOKEN = '8431820910:AAH3d5jRqieyMc_aBIi2OFDj6AhIWVg2fuU';
+const TELEGRAM_CHAT_ID = '236911838';
+
+// Функция отправки в Telegram
+async function sendTelegram(message) {
+    try {
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: message,
+                parse_mode: 'HTML'
+            })
+        });
+    } catch (err) {
+        console.error('Telegram error:', err.message);
+    }
+}
+
+// Уведомление об изменении смены
+async function notifyShiftChange(employeeName, dateStr, data, action) {
+    let emoji = '📝';
+    let actionText = 'изменена';
+    
+    if (action === 'created') { emoji = '✅'; actionText = 'добавлена'; }
+    else if (action === 'deleted') { emoji = '❌'; actionText = 'удалена'; }
+    
+    let shiftInfo = '';
+    if (data) {
+        if (data.type === 'work') {
+            shiftInfo = `🕐 ${data.hours} часов`;
+            if (data.cleaning === 'cleaning') shiftInfo += ' + уборка';
+            else if (data.cleaning === 'fullCleaning') shiftInfo += ' + полная уборка';
+        } else if (data.type === 'off') shiftInfo = '🏠 Выходной';
+        else if (data.type === 'vacation') shiftInfo = '🏖️ Отпуск';
+        else if (data.type === 'sick') shiftInfo = '🏥 Больничный';
+    }
+    
+    const message = `${emoji} <b>Смена ${actionText}</b>
+
+👤 Сотрудник: <b>${employeeName}</b>
+📅 Дата: <b>${dateStr}</b>
+${shiftInfo ? '📋 ' + shiftInfo : ''}`;
+
+    await sendTelegram(message);
+}
+
+// ==================== MONGODB ====================
+
 const MONGODB_URI = process.env.MONGODB_URI || 'ваша_строка_подключения_сюда';
 
 mongoose.connect(MONGODB_URI)
@@ -30,10 +81,10 @@ const EmployeeSchema = new mongoose.Schema({
 });
 
 const ShiftSchema = new mongoose.Schema({
-    key: { type: String, unique: true }, // формат: empId_year-month-day
-    type: String, // 'work', 'off', 'vacation', 'sick'
+    key: { type: String, unique: true },
+    type: String,
     hours: Number,
-    cleaning: String // null, 'cleaning', 'fullCleaning'
+    cleaning: String
 });
 
 const Settings = mongoose.model('Settings', SettingsSchema);
@@ -137,6 +188,9 @@ app.post('/api/employees', auth, async (req, res) => {
         
         await employee.save();
         
+        // 📢 Уведомление в Telegram
+        await sendTelegram(`👤 <b>Новый сотрудник</b>\n\nДобавлен: <b>${name}</b>`);
+        
         res.json({
             id: employee._id.toString(),
             name: employee.name,
@@ -149,9 +203,15 @@ app.post('/api/employees', auth, async (req, res) => {
 
 app.delete('/api/employees/:id', auth, async (req, res) => {
     try {
+        const employee = await Employee.findById(req.params.id);
+        const employeeName = employee ? employee.name : 'Неизвестный';
+        
         await Employee.findByIdAndDelete(req.params.id);
-        // Удаляем все смены этого сотрудника
         await Shift.deleteMany({ key: { $regex: `^${req.params.id}_` } });
+        
+        // 📢 Уведомление в Telegram
+        await sendTelegram(`🗑️ <b>Сотрудник удалён</b>\n\nУдалён: <b>${employeeName}</b>`);
+        
         res.json({ ok: true });
     } catch (err) {
         res.status(500).json({ error: 'Ошибка сервера' });
@@ -181,6 +241,23 @@ app.post('/api/shifts', auth, async (req, res) => {
     try {
         const { key, data } = req.body;
         
+        // Получаем информацию для уведомления
+        const [empId, dateKey] = key.split('_');
+        const employee = await Employee.findById(empId);
+        const employeeName = employee ? employee.name : 'Неизвестный';
+        
+        // Парсим дату
+        const [year, month, day] = dateKey.split('-');
+        const monthNames = ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'];
+        const formattedDate = `${day} ${monthNames[parseInt(month)]} ${year}`;
+        
+        // Определяем тип действия
+        const existingShift = await Shift.findOne({ key });
+        let action = 'updated';
+        if (!existingShift && data) action = 'created';
+        else if (data === null) action = 'deleted';
+        
+        // Сохраняем/удаляем смену
         if (data === null) {
             await Shift.findOneAndDelete({ key });
         } else {
@@ -190,6 +267,9 @@ app.post('/api/shifts', auth, async (req, res) => {
                 { upsert: true, new: true }
             );
         }
+        
+        // 📢 Уведомление в Telegram
+        await notifyShiftChange(employeeName, formattedDate, data, action);
         
         res.json({ ok: true });
     } catch (err) {
