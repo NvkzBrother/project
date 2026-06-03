@@ -1872,8 +1872,17 @@
 
         function selectCleaning(type) {
             selectedCleaning = type;
-            document.querySelectorAll('.cleaning-option').forEach(el => el.classList.remove('active'));
-            document.querySelector(`.cleaning-option.${type === 'none' ? 'none' : type}`).classList.add('active');
+
+            document.querySelectorAll('.cleaning-option')
+                .forEach(el => el.classList.remove('active'));
+
+            if (type === 'none') {
+                document.querySelector('.cleaning-option.none').classList.add('active');
+            } else if (type === 'rodents') {
+                document.querySelector('.cleaning-option.cleaning').classList.add('active');
+            } else if (type === 'birds') {
+                document.querySelector('.cleaning-option.fullCleaning').classList.add('active');
+            }
         }
 
         function openShiftModal(empId, year, month, day) {
