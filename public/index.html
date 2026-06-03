@@ -1358,8 +1358,8 @@
 
             <div class="legend">
                 <div class="legend-item"><div class="legend-color shift-work">10</div><span>Смена</span></div>
-                <div class="legend-item"><div class="legend-color shift-work-rodents">У</div><span>Уборка</span></div>
-                <div class="legend-item"><div class="legend-color shift-work-birds">У1</div><span>Полная уборка</span></div>
+                <div class="legend-item"><div class="legend-color shift-work-birds">П</div><span>Птицы</span></div>
+                <div class="legend-item"><div class="legend-color shift-work-rodents">Г</div><span>Грызуны</span></div>
                 <div class="legend-item"><div class="legend-color shift-off">В</div><span>Вых</span></div>
                 <div class="legend-item"><div class="legend-color shift-vacation">О</div><span>Отп</span></div>
                 <div class="legend-item"><div class="legend-color shift-sick">Б</div><span>Бол</span></div>
@@ -1749,8 +1749,8 @@
             if (data.type === 'work') {
                 let label = data.hours.toString();
                 let cls = 'shift-work';
-                if (data.cleaning === 'cleaning') { label += '/У'; cls = 'shift-work-rodents'; }
-                else if (data.cleaning === 'fullCleaning') { label += '/У1'; cls = 'shift-work-birds'; }
+                if (data.cleaning === 'rodents' || data.cleaning === 'cleaning') { label += '/Г'; cls = 'shift-work-rodents'; }
+                else if (data.cleaning === 'birds' || data.cleaning === 'fullCleaning') { label += '/П'; cls = 'shift-work-birds'; }
                 return { label, class: cls };
             }
             const map = {
@@ -1766,8 +1766,8 @@
             if (data.type === 'work') {
                 let label = data.hours.toString();
                 let cls = 'shift-work';
-                if (data.cleaning === 'cleaning') { cls = 'shift-work-rodents'; }
-                else if (data.cleaning === 'fullCleaning') { cls = 'shift-work-birds'; }
+                if (data.cleaning === 'rodents' || data.cleaning === 'cleaning') { cls = 'shift-work-rodents'; }
+                else if (data.cleaning === 'birds' || data.cleaning === 'fullCleaning') { cls = 'shift-work-birds'; }
                 return { label, class: cls };
             }
             const map = {
