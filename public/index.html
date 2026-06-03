@@ -1510,7 +1510,6 @@
         let currentDate = new Date();
         let selectedCell = null;
         let selectedCleaning = 'none';
-        let selectedHours = 10;
         let selectedEmployee = null;
         let isMobile = window.innerWidth <= 768;
 
@@ -1680,7 +1679,7 @@
 
         async function saveWorkShift() {
             if (!selectedCell) return;
-            const hours = selectedHours;
+            const hours = parseInt(document.getElementById('modalHours').value) || DEFAULT_HOURS;
             const key = `${selectedCell.empId}_${selectedCell.year}-${selectedCell.month}-${selectedCell.day}`;
             await saveShift(key, { type: 'work', hours, cleaning: selectedCleaning === 'none' ? null : selectedCleaning });
             closeModal();
@@ -1750,8 +1749,8 @@
             if (data.type === 'work') {
                 let label = data.hours.toString();
                 let cls = 'shift-work';
-                if (data.cleaning === 'rodents') { label += '/У'; cls = 'shift-work-rodents'; }
-                else if (data.cleaning === 'birds') { label += '/У1'; cls = 'shift-work-birds'; }
+                if (data.cleaning === 'cleaning') { label += '/У'; cls = 'shift-work-rodents'; }
+                else if (data.cleaning === 'fullCleaning') { label += '/У1'; cls = 'shift-work-birds'; }
                 return { label, class: cls };
             }
             const map = {
@@ -1767,8 +1766,8 @@
             if (data.type === 'work') {
                 let label = data.hours.toString();
                 let cls = 'shift-work';
-                if (data.cleaning === 'rodents') { cls = 'shift-work-rodents'; }
-                else if (data.cleaning === 'birds') { cls = 'shift-work-birds'; }
+                if (data.cleaning === 'cleaning') { cls = 'shift-work-rodents'; }
+                else if (data.cleaning === 'fullCleaning') { cls = 'shift-work-birds'; }
                 return { label, class: cls };
             }
             const map = {
@@ -1838,8 +1837,8 @@
                         if (shift.type === 'work') {
                             s.hours += shift.hours;
                             s.shifts++;
-                            if (shift.cleaning === 'rodents') s.cleaning++;
-                            else if (shift.cleaning === 'birds') s.fullCleaning++;
+                            if (shift.cleaning === 'cleaning') s.cleaning++;
+                            else if (shift.cleaning === 'fullCleaning') s.fullCleaning++;
                         } else s[shift.type]++;
                     }
                 }
@@ -1935,8 +1934,8 @@
                 if (shift?.type === 'work') {
                     stats.hours += shift.hours;
                     stats.shifts++;
-                    if (shift.cleaning === 'rodents') stats.cleaning++;
-                    else if (shift.cleaning === 'birds') stats.fullCleaning++;
+                    if (shift.cleaning === 'cleaning') stats.cleaning++;
+                    else if (shift.cleaning === 'fullCleaning') stats.fullCleaning++;
                 }
             }
             
