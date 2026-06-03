@@ -540,11 +540,11 @@
             background: linear-gradient(135deg, #00d9ff, #00a8cc) !important; 
             color: #1a1a2e; 
         }
-        .shift-work-cleaning { 
+        .shift-work-rodents { 
             background: linear-gradient(135deg, #a29bfe, #6c5ce7) !important; 
             color: #fff; 
         }
-        .shift-work-fullCleaning { 
+        .shift-work-birds { 
             background: linear-gradient(135deg, #fd79a8, #e84393) !important; 
             color: #fff; 
         }
@@ -900,11 +900,11 @@
             background: linear-gradient(135deg, #00d9ff, #00a8cc); 
             color: #1a1a2e; 
         }
-        .emp-calendar-day.shift-work-cleaning { 
+        .emp-calendar-day.shift-work-rodents { 
             background: linear-gradient(135deg, #a29bfe, #6c5ce7); 
             color: #fff; 
         }
-        .emp-calendar-day.shift-work-fullCleaning { 
+        .emp-calendar-day.shift-work-birds { 
             background: linear-gradient(135deg, #fd79a8, #e84393); 
             color: #fff; 
         }
@@ -1358,8 +1358,8 @@
 
             <div class="legend">
                 <div class="legend-item"><div class="legend-color shift-work">10</div><span>Смена</span></div>
-                <div class="legend-item"><div class="legend-color shift-work-cleaning">У</div><span>Уборка</span></div>
-                <div class="legend-item"><div class="legend-color shift-work-fullCleaning">У1</div><span>Полная уборка</span></div>
+                <div class="legend-item"><div class="legend-color shift-work-rodents">У</div><span>Уборка</span></div>
+                <div class="legend-item"><div class="legend-color shift-work-birds">У1</div><span>Полная уборка</span></div>
                 <div class="legend-item"><div class="legend-color shift-off">В</div><span>Вых</span></div>
                 <div class="legend-item"><div class="legend-color shift-vacation">О</div><span>Отп</span></div>
                 <div class="legend-item"><div class="legend-color shift-sick">Б</div><span>Бол</span></div>
@@ -1449,8 +1449,8 @@
                 </div>
                 <div class="cleaning-options">
                     <div class="cleaning-option none active" onclick="selectCleaning('none')">Без уборки</div>
-                    <div class="cleaning-option cleaning" onclick="selectCleaning('cleaning')">🧹 Уборка</div>
-                    <div class="cleaning-option fullCleaning" onclick="selectCleaning('fullCleaning')">🧽 Полная</div>
+                    <div class="cleaning-option cleaning" onclick="selectCleaning('rodents')">🐭 Грызуны</div>
+                    <div class="cleaning-option fullCleaning" onclick="selectCleaning('birds')">🐦 Птицы</div>
                 </div>
                 <button class="save-work-btn" onclick="saveWorkShift()">✓ Сохранить</button>
             </div>
@@ -1486,8 +1486,8 @@
             
             <div class="emp-legend">
                 <div class="emp-legend-item"><div class="emp-legend-color shift-work"></div>Работа</div>
-                <div class="emp-legend-item"><div class="emp-legend-color shift-work-cleaning"></div>Уборка</div>
-                <div class="emp-legend-item"><div class="emp-legend-color shift-work-fullCleaning"></div>Полная</div>
+                <div class="emp-legend-item"><div class="emp-legend-color shift-work-rodents"></div>Уборка</div>
+                <div class="emp-legend-item"><div class="emp-legend-color shift-work-birds"></div>Полная</div>
                 <div class="emp-legend-item"><div class="emp-legend-color shift-off"></div>Вых</div>
                 <div class="emp-legend-item"><div class="emp-legend-color shift-vacation"></div>Отп</div>
                 <div class="emp-legend-item"><div class="emp-legend-color shift-sick"></div>Бол</div>
@@ -1510,6 +1510,7 @@
         let currentDate = new Date();
         let selectedCell = null;
         let selectedCleaning = 'none';
+        let selectedHours = 10;
         let selectedEmployee = null;
         let isMobile = window.innerWidth <= 768;
 
@@ -1679,7 +1680,7 @@
 
         async function saveWorkShift() {
             if (!selectedCell) return;
-            const hours = parseInt(document.getElementById('modalHours').value) || DEFAULT_HOURS;
+            const hours = selectedHours;
             const key = `${selectedCell.empId}_${selectedCell.year}-${selectedCell.month}-${selectedCell.day}`;
             await saveShift(key, { type: 'work', hours, cleaning: selectedCleaning === 'none' ? null : selectedCleaning });
             closeModal();
@@ -1749,8 +1750,8 @@
             if (data.type === 'work') {
                 let label = data.hours.toString();
                 let cls = 'shift-work';
-                if (data.cleaning === 'cleaning') { label += '/У'; cls = 'shift-work-cleaning'; }
-                else if (data.cleaning === 'fullCleaning') { label += '/У1'; cls = 'shift-work-fullCleaning'; }
+                if (data.cleaning === 'rodents') { label += '/У'; cls = 'shift-work-rodents'; }
+                else if (data.cleaning === 'birds') { label += '/У1'; cls = 'shift-work-birds'; }
                 return { label, class: cls };
             }
             const map = {
@@ -1766,8 +1767,8 @@
             if (data.type === 'work') {
                 let label = data.hours.toString();
                 let cls = 'shift-work';
-                if (data.cleaning === 'cleaning') { cls = 'shift-work-cleaning'; }
-                else if (data.cleaning === 'fullCleaning') { cls = 'shift-work-fullCleaning'; }
+                if (data.cleaning === 'rodents') { cls = 'shift-work-rodents'; }
+                else if (data.cleaning === 'birds') { cls = 'shift-work-birds'; }
                 return { label, class: cls };
             }
             const map = {
@@ -1837,8 +1838,8 @@
                         if (shift.type === 'work') {
                             s.hours += shift.hours;
                             s.shifts++;
-                            if (shift.cleaning === 'cleaning') s.cleaning++;
-                            else if (shift.cleaning === 'fullCleaning') s.fullCleaning++;
+                            if (shift.cleaning === 'rodents') s.cleaning++;
+                            else if (shift.cleaning === 'birds') s.fullCleaning++;
                         } else s[shift.type]++;
                     }
                 }
@@ -1934,8 +1935,8 @@
                 if (shift?.type === 'work') {
                     stats.hours += shift.hours;
                     stats.shifts++;
-                    if (shift.cleaning === 'cleaning') stats.cleaning++;
-                    else if (shift.cleaning === 'fullCleaning') stats.fullCleaning++;
+                    if (shift.cleaning === 'rodents') stats.cleaning++;
+                    else if (shift.cleaning === 'birds') stats.fullCleaning++;
                 }
             }
             
